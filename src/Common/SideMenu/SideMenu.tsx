@@ -6,7 +6,11 @@ import {
   ListItemText,
   SwipeableDrawer,
 } from "@mui/material";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import KeyIcon from '@mui/icons-material/Key';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import { Link, useNavigate } from "react-router-dom";
+import HomeIcon from '@mui/icons-material/Home';
+
 
 type Props = {
   isOpen: boolean;
@@ -14,6 +18,7 @@ type Props = {
 };
 
 export const SideMenu = (props: Props) => {
+  const navigate = useNavigate();
   return (
     <SwipeableDrawer
       anchor={"right"}
@@ -27,12 +32,26 @@ export const SideMenu = (props: Props) => {
         onKeyDown={props.toggleDrawer}
       >
         <List>
-          <ListItem button>
+        <ListItem button onClick={() => { navigate('/'); }}>
             <ListItemIcon>
-              <InboxIcon />
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary={"בית"} />
+          </ListItem>
+          <ListItem button onClick={() => { navigate('/key'); }}>
+            <ListItemIcon>
+              <KeyIcon />
             </ListItemIcon>
             <ListItemText primary={"מפתחות"} />
           </ListItem>
+          <ListItem button onClick={() => { navigate('/class'); }}>
+            <ListItemIcon>
+              <MeetingRoomIcon />
+            </ListItemIcon>
+            <ListItemText primary={"כיתות"} >
+              <Link to="/class"></Link>
+            </ListItemText>
+          </ListItem> 
         </List>
       </Box>
     </SwipeableDrawer>

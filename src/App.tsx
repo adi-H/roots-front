@@ -4,6 +4,8 @@ import "./App.css";
 import { AppBarComponent } from "./Common/AppBar/AppBar";
 import { SideMenu } from "./Common/SideMenu/SideMenu";
 import { Home } from "./Screens/Home/Home";
+import Classes from "./Screens/Classes/Classes";
+import Keys from './Screens/Keys/Keys'
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -17,7 +19,9 @@ function App() {
       <AppBarComponent toggleDrawer={toggleDrawer} />
       <SideMenu isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
       <Routes>
-        <Route path="/" element={Home} />
+        <Route path="/" element={<Home />} />
+        <Route path="/class" element={<Classes />} />
+        <Route path="/key" element={<Keys />} />
       </Routes>
     </>
   );

@@ -8,12 +8,15 @@ import {
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   toggleDrawer: () => void;
 };
 
 export const AppBarComponent = (props: Props) => {
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -28,6 +31,7 @@ export const AppBarComponent = (props: Props) => {
             <MenuIcon />
           </IconButton>
           <Typography
+            onClick={() => { navigate('/'); }}
             variant="h6"
             component="div"
             sx={{ flexGrow: 1 }}
