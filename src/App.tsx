@@ -4,7 +4,9 @@ import "./App.css";
 import { AppBarComponent } from "./Common/AppBar/AppBar";
 import { SideMenu } from "./Common/SideMenu/SideMenu";
 import { Home } from "./Screens/Home/Home";
-import Classes from "./Screens/Classes/Classes";
+// import Classes from "./Screens/Classes/Components/SearchClass";
+// import Classes from "./Screens/Classes/Classes";
+import Classes from "./Screens/Classes/ClassRegister";
 import Keys from './Screens/Keys/Keys'
 
 function App() {

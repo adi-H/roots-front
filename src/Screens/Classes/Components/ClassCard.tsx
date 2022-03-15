@@ -50,14 +50,21 @@ export default function BasicCard(props: any) {
           </CardActions>
         </CardActionArea>
       </Card>
+      
       <Card sx={{ backgroundColor: cardColor, minHeight:175 }} >
         <CardActionArea onClick={flipCard}>
           <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          <Typography variant="h5" component="div">
+              פרטי הכיתה:
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary" gutterBottom>
               גודל: {info.size}
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               מקרן: {projector}
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              מחשבים: {projector}
             </Typography>
           </CardContent>
         </CardActionArea>
