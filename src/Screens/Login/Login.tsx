@@ -72,7 +72,7 @@ export const Login = (props: Props) => {
         onClick={handleSubmit}
         type="submit"
         variant="contained"
-        sx={{ mt: isWrongCredentials ? 1 : 3 }}
+        sx={{ borderRadius: 28, mt: isWrongCredentials ? 1 : 3 }}
       >
         התחברות
       </Button>

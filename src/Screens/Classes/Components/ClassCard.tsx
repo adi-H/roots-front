@@ -6,6 +6,19 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useState } from "react";
 import { CardActionArea } from '@mui/material';
+import { createTheme } from '@mui/material';
+
+const theme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 28,
+        },
+      }, 
+    }, 
+  },
+});
 
 export default function BasicCard(props: any) {
   const info = props.info;
@@ -46,7 +59,7 @@ export default function BasicCard(props: any) {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button onClick={flipCard} variant="contained" fullWidth>שריין כיתה</Button>
+            <Button sx={ { borderRadius: 28 } } onClick={flipCard} variant="contained" fullWidth>שריין כיתה</Button>
           </CardActions>
         </CardActionArea>
       </Card>

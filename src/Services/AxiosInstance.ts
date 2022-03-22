@@ -7,10 +7,10 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.response.use(
-  (response) => {
+  (response: any) => {
     return response;
   },
-  (error) => {
+  (error: any) => {
     if (error.response.status === 401) {
     }
     window.location.href = "/login";
