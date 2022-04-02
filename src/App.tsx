@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import jwt_decode from "jwt-decode";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
-import { AppBarComponent } from "./Common/AppBar/AppBar";
-import { SideMenu } from "./Common/SideMenu/SideMenu";
+import { RequireAuth } from "./Common/RequireAuth/RequireAuth";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
 import { Login } from "./Screens/Login/Login";
 import { User } from "./types/types";
-import jwt_decode from "jwt-decode";
-import { useEffect } from "react";
-import { RequireAuth } from "./Common/RequireAuth/RequireAuth";
 
 type Props = {};
 
