@@ -1,28 +1,13 @@
 import ClassCard from "./ClassCard";
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import { useEffect } from "react";
-import { positions } from '@mui/system';
-import { spacing } from '@mui/system';
-import useState from 'react-usestateref'
+import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton';
-
-// const classes = [
-//   { "no": "805", "building": "נקרות", "type": "פלוגתית", "projector": true, "size": "פלוגתית" },
-//   { "no": "622", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },
-//   { "no": "455", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },
-//   { "no": "125", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },
-//   { "no": "405", "building": "רבין", "type": "פלוגתית", "projector": false, "size": "צוותית" },
-//   { "no": "206", "building": "מחשבים", "type": "גדודית", "projector": true, "size": "פלוגתית" },
-//   { "no": "898", "building": "מחשבים", "type": "גדודית", "projector": true, "size": "פלוגתית" },
-//   { "no": "805", "building": "נקרות", "type": "בה\"דית", "projector": true, "size": "פלוגתית" },
-// ];
 
 export default function Classes(props: any) {
   let classes: any = props.data;
   const [isLoading, setIsLoading] = useState(false);
-  const [isDisableed, setIsDisableed, isDisableedRef] = useState(false);
-  const [type, setType, typeRef] = useState("פלוגתית");
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [type, setType] = useState("פלוגתית");
 
   let classInfos: any = [];
 
@@ -32,7 +17,7 @@ export default function Classes(props: any) {
     }
   })
 
-  const [infos, setInfos, infosRef] = useState(classInfos);
+  const [infos, setInfos] = useState(classInfos);
 
 
   let itemList: any = [];
@@ -47,39 +32,44 @@ export default function Classes(props: any) {
     setIsLoading((currentState:boolean) => !currentState)
     setTimeout(async () => {
       let size = infos.length;
+      let disabled: boolean = isDisabled;
+      let i = infos;
 
       classInfos = infos;
+
+      let t: string = type;
       
-      while (size == infosRef.current.length && !isDisableedRef.current) {
-        if (typeRef.current == "פלוגתית") {
-          setType("דו\"פ")
-        } else if (typeRef.current == "דו\"פ") {
-          setType("גדודית")
-        } else if (typeRef.current == "גדודית") {
-          setType("בה\"דית")
-          setIsDisableed(() => true);
+      while (size == i.length && !disabled) {
+        if (t == "פלוגתית") {
+          t = "דו\"פ";
+        } else if (t == "דו\"פ") {
+          t = "גדודית";
+        } else if (t == "גדודית") {
+          t = "בה\"דית";
+          disabled = true;
         }
 
         classes.forEach((classResponse: any) => {
-          if (classResponse.type == typeRef.current) {
+          if (classResponse.type == t) {
             classInfos.push(classResponse)
           }
         })
 
-        console.log(typeRef.current)
         console.log(classInfos)
 
 
         setInfos(classInfos)
       }
-      console.log(infos)
       
       itemList = [];
 
-      infosRef.current.forEach((classInfo: any) => {
+      i.forEach((classInfo: any) => {
         itemList.push(<Grid item xs={6}><ClassCard info={classInfo} /></Grid>)
       })
 
+      setIsDisabled(disabled);
+      setType(t);
+      setInfos(i);
       setCards(itemList)
 
       setIsLoading((currentState:boolean) => !currentState)
@@ -93,7 +83,7 @@ export default function Classes(props: any) {
         {cards}
       </Grid>
       <br></br>
-      <LoadingButton disabled={isDisableed} onClick={load} loading={isLoading} sx={{ display: "flex", maxWidth: 375, position: "fixed", bottom: 0 }} variant="contained" fullWidth>טען עוד</LoadingButton>
+      <LoadingButton disabled={isDisabled} onClick={load} loading={isLoading} sx={{ display: "flex", maxWidth: 375, position: "fixed", bottom: 0 }} variant="contained" fullWidth>טען עוד</LoadingButton>
     </main>
   );
 }

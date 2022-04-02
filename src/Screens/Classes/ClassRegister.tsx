@@ -4,7 +4,7 @@ import Results from "./Components/Classes";
 import React, { useState } from "react";
 
 
-const classes = [
+const classes: Class[] = [
   { "no": "805", "building": "נקרות", "type": "פלוגתית", "projector": true, "size": "פלוגתית" },
   { "no": "622", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },
   { "no": "455", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },

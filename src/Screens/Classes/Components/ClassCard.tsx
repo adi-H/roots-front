@@ -5,8 +5,14 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useState } from "react";
+import TextField from '@mui/material/TextField';
 import { CardActionArea } from '@mui/material';
 import { createTheme } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const theme = createTheme({
   components: {
@@ -15,8 +21,8 @@ const theme = createTheme({
         root: {
           borderRadius: 28,
         },
-      }, 
-    }, 
+      },
+    },
   },
 });
 
@@ -43,45 +49,76 @@ export default function BasicCard(props: any) {
     projector = "לא";
   }
 
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-      <Card sx={{ backgroundColor: cardColor, minHeight:175 }}>
-        <CardActionArea onClick={flipCard}>
+    <div>
+      <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
+        <Card sx={{ backgroundColor: cardColor, minHeight: 175 }}>
           <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-              בניין {info.building}
-            </Typography>
-            <Typography variant="h5" component="div">
-              {info.no}
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              כיתה {info.type}
-            </Typography>
+            <CardActionArea onClick={flipCard}>
+
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                בניין {info.building}
+              </Typography>
+              <Typography variant="h5" component="div">
+                {info.no}
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                כיתה {info.type}
+              </Typography>
+            </CardActionArea>
+
           </CardContent>
           <CardActions>
-            <Button sx={ { borderRadius: 28 } } onClick={flipCard} variant="contained" fullWidth>שריין כיתה</Button>
+            <Button sx={{ borderRadius: 28 }} onClick={handleClickOpen} variant="contained" fullWidth>שריין כיתה</Button>
           </CardActions>
-        </CardActionArea>
-      </Card>
-      
-      <Card sx={{ backgroundColor: cardColor, minHeight:175 }} >
-        <CardActionArea onClick={flipCard}>
-          <CardContent>
-          <Typography variant="h5" component="div">
-              פרטי הכיתה:
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary" gutterBottom>
-              גודל: {info.size}
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              מקרן: {projector}
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              מחשבים: {projector}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </ReactCardFlip>
+        </Card>
+
+        <Card sx={{ backgroundColor: cardColor, minHeight: 175 }} >
+          <CardActionArea onClick={flipCard}>
+            <CardContent>
+              <Typography variant="h5" component="div">
+                פרטי הכיתה:
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary" gutterBottom>
+                גודל: {info.size}
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                מקרן: {projector}
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                מחשבים: {projector}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </ReactCardFlip>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>מה האירוע?</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="שם האירוע"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>שריין</Button>
+          <Button onClick={handleClose}>בטל</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
