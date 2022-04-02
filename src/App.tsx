@@ -39,12 +39,6 @@ function App(props: Props) {
   return (
     <UserContext.Provider value={loggedUser}>
       <>
-        {/* {location.pathname !== "/login" && (
-          <>
-            <AppBarComponent toggleDrawer={toggleDrawer} />
-            <SideMenu isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
-          </>
-        )} */}
         <Routes>
           <Route
             path="/"
