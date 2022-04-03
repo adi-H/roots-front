@@ -1,10 +1,10 @@
-import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { AuthService } from "../../Services/AuthService";
+import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AuthService } from "../../Services/AuthService";
 
-type Props = {};
+type Props = { storeUserContext: () => void };
 
 export const Login = (props: Props) => {
   const [username, setUsername] = useState("");
@@ -12,10 +12,14 @@ export const Login = (props: Props) => {
   const [isWrongCredentials, setIsWrongCredentials] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async () => {
     if (await AuthService.login(username, password)) {
-      navigate("../", { replace: true });
+      props.storeUserContext();
+      navigate((location.state as any)?.from?.pathname || "/", {
+        replace: true,
+      });
     } else {
       setIsWrongCredentials(true);
     }
