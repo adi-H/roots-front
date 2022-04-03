@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { RequireAuth } from "./Common/RequireAuth/RequireAuth";
+import { BroshShishi } from "./Screens/BroshShishi/BroshShishi";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
 import { Login } from "./Screens/Login/Login";
@@ -57,6 +58,14 @@ function App(props: Props) {
             element={
               <RequireAuth>
                 <Calendar />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/broshShishi"
+            element={
+              <RequireAuth>
+                <BroshShishi />
               </RequireAuth>
             }
           />

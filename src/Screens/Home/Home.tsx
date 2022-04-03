@@ -26,7 +26,7 @@ const buttons = [
     text: "ברושישי",
     icon: NewspaperIcon,
     backgroundColor: "#EAD773",
-    navigateTo: "news",
+    navigateTo: "broshShishi",
   },
   {
     text: "אודות",

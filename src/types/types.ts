@@ -40,3 +40,9 @@ export interface Unit {
   parent: Unit;
   children: Unit[];
 }
+
+export interface Url {
+  id: number;
+  name: string;
+  url: string;
+}
