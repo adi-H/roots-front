@@ -11,17 +11,6 @@ import * as React from "react";
 import { ClassTypeService } from "../../../Services/ClassTypeService";
 import { ClassType } from "../../../types/types";
 
-// const data = [
-//     { "no": "805", "building": "נקרות", "type": "פלוגתית", "projector": true, "size": "פלוגתית" },
-//     { "no": "622", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },
-//     { "no": "455", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },
-//     { "no": "125", "building": "נקרות", "type": "דו\"פ", "projector": true, "size": "פלוגתית" },
-//     { "no": "405", "building": "רבין", "type": "פלוגתית", "projector": false, "size": "צוותית" },
-//     { "no": "206", "building": "מחשבים", "type": "גדודית", "projector": true, "size": "פלוגתית" },
-//     { "no": "898", "building": "מחשבים", "type": "גדודית", "projector": true, "size": "פלוגתית" },
-//     { "no": "805", "building": "נקרות", "type": "בה\"דית", "projector": true, "size": "פלוגתית" },
-//   ];
-
 type Props = {
   handleSearchClasses: (
     startDate: Date,
