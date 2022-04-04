@@ -4,6 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { RequireAuth } from "./Common/RequireAuth/RequireAuth";
 import { BroshShishi } from "./Screens/BroshShishi/BroshShishi";
+import { Matzal } from "./Screens/Matzal/Matzal";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
 import { Login } from "./Screens/Login/Login";
@@ -66,6 +67,14 @@ function App(props: Props) {
             element={
               <RequireAuth>
                 <BroshShishi />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/matzal"
+            element={
+              <RequireAuth>
+                <Matzal />
               </RequireAuth>
             }
           />
