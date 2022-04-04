@@ -11,7 +11,7 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 const theme = createTheme({
-  direction: "ltr",
+  direction: "rtl",
   typography: {
     fontFamily: "Heebo",
   },
@@ -25,9 +25,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        {/* <CacheProvider value={cacheRtl}> */}
+        <CacheProvider value={cacheRtl}>
           <App />
-        {/* </CacheProvider> */}
+        </CacheProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,

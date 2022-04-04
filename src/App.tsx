@@ -6,7 +6,7 @@ import { RequireAuth } from "./Common/RequireAuth/RequireAuth";
 import { BroshShishi } from "./Screens/BroshShishi/BroshShishi";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
-import Classes from "./Screens/Classes/ClassRegister";
+import Classes from "./Screens/Classes/ClassRegister/ClassRegister";
 import Keys from "./Screens/Keys/Keys";
 import { Login } from "./Screens/Login/Login";
 import { User } from "./types/types";

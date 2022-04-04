@@ -115,7 +115,7 @@ export const Calendar = (props: Props) => {
 
   return (
     <>
-      <PageTitle title={"שריון כיתות"}></PageTitle>
+      <PageTitle title={'לו"ז כיתות'}></PageTitle>
       <ClassRequests
         classRequests={classRequests}
         onRequestAccept={handleRequestAccept}
