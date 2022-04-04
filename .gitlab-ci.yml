@@ -1,0 +1,56 @@
+# This file is a template, and might need editing before it works on your project.
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/5-Minute-Production-App.gitlab-ci.yml
+
+# This template is on early stage of development.
+# Use it with caution. For usage instruction please read
+# https://gitlab.com/gitlab-org/5-minute-production-app/deploy-template/-/blob/v3.0.0/README.md
+
+include:
+  # workflow rules to prevent duplicate detached pipelines
+  - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
+  # auto devops build
+  - template: 'Jobs/Build.gitlab-ci.yml'
+
+stages:
+  - build
+  - test
+  - provision
+  - deploy
+  
+# This file is a template, and might need editing before it works on your project.
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Docker.gitlab-ci.yml
+
+# Build a Docker image with CI/CD and push to the GitLab registry.
+# Docker-in-Docker documentation: https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+#
+# This template uses one generic job with conditional builds
+# for the default branch and all other (MR) branches.
+
+variables:
+  CI_REGISTRY_IMAGE: "omridim/roots-front"
+
+docker-build:
+  # Use the official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u omridim -p 49c418f2-cac3-4a57-81ad-e7d31268e476
+  # Default branch leaves tag empty (= latest tag)
+  # All other branches are tagged with the escaped branch name (commit ref slug)
+  script:
+    - tag=":$CI_COMMIT_REF_SLUG"
+    - echo "Running on branch '$CI_COMMIT_BRANCH'"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE${tag}" .
+    - docker push "$CI_REGISTRY_IMAGE${tag}"
+  # Run this job in a branch where a Dockerfile exists
+  only:
+    - main
+
