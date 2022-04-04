@@ -19,7 +19,7 @@ export default function Classes(props: Props) {
     if (props.foundClasses.length === 0) {
       setToShowAll(true);
 
-      return <Typography>אין כיתות פלוגתיות זמינות</Typography>;
+      return <Typography fontWeight={"bold"}>אין כיתות זמינות</Typography>;
     }
 
     const classCards = props.foundClasses
@@ -39,7 +39,7 @@ export default function Classes(props: Props) {
     return classCards.length > 0 ? (
       classCards
     ) : (
-      <Typography>אין כיתות פלוגתיות זמינות</Typography>
+      <Typography fontWeight={"bold"}>אין כיתות פלוגתיות זמינות</Typography>
     );
   };
 
@@ -49,20 +49,9 @@ export default function Classes(props: Props) {
         container
         rowSpacing={{ xs: 1, sm: 2, md: 3 }}
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+        justifyContent="center"
       >
-        {props.foundClasses
-          .filter(
-            (foundClass: Class) =>
-              toShowAll || foundClass.owner.id == currentUser.team.parent.id
-          )
-          .map((foundClass: Class) => (
-            <Grid item xs={6} key={foundClass.id}>
-              <ClassCard
-                classInfo={foundClass}
-                isPluga={foundClass.owner.id == currentUser.team.parent.id}
-              />
-            </Grid>
-          ))}
+        {filterAndMapClasses()}
       </Grid>
       <br></br>
       <LoadingButton
