@@ -11,7 +11,7 @@ axiosInstance.interceptors.response.use(
     handleDates(response.data);
     return response;
   },
-  (error) => {
+  (error: any) => {
     if (error.response.status === 401) {
       window.location.href = "/login";
     }

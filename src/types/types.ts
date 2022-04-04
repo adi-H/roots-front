@@ -3,6 +3,7 @@ export interface Class {
   name: string;
   building: Building;
   owner: Unit;
+  type: ClassType;
 }
 
 export interface Role {
@@ -45,4 +46,9 @@ export interface Url {
   id: number;
   name: string;
   url: string;
+}
+
+export interface ClassType {
+  id: number;
+  name: string;
 }
