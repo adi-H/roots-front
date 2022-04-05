@@ -6,6 +6,7 @@ import { RequireAuth } from "./Common/RequireAuth/RequireAuth";
 import { BroshShishi } from "./Screens/BroshShishi/BroshShishi";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
+import Kalag from "./Screens/Kalag/Kalag";
 import { Login } from "./Screens/Login/Login";
 import { User } from "./types/types";
 
@@ -66,6 +67,14 @@ function App(props: Props) {
             element={
               <RequireAuth>
                 <BroshShishi />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/logistics"
+            element={
+              <RequireAuth>
+                <Kalag />
               </RequireAuth>
             }
           />
