@@ -3,6 +3,7 @@ export interface Class {
   name: string;
   building: Building;
   owner: Unit;
+  type: ClassType;
 }
 
 export interface Role {
@@ -53,4 +54,8 @@ export interface Attendance {
   id: number;
   reason: string;
   inAttendance: boolean;
+}
+export interface ClassType {
+  id: number;
+  name: string;
 }
