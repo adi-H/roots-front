@@ -12,19 +12,19 @@ import { ClassTypeService } from "../../../Services/ClassTypeService";
 import { ClassType } from "../../../types/types";
 
 type Props = {
-  handleSearchClasses: (
-    startDate: Date,
-    endDate: Date,
-    classTypeId: number
-  ) => void;
+  chosenDate: Date;
+  startTime: Date;
+  endTime: Date;
+  chosenClassTypeId: number;
+  handleSearchClasses: (startDate: Date, endDate: Date) => void;
+  setChosenClassTypeId: (classId: number) => void;
+  setStartTime: (startTime: Date) => void;
+  setEndTime: (endTime: Date) => void;
+  setChosenDate: (chosenDate: Date) => void;
 };
 
 export const ResponsiveDatePickers = (props: Props) => {
-  const [chosenDate, setChosenDate] = React.useState<Date>(new Date());
-  const [startTime, setStartTime] = React.useState<Date>(new Date());
-  const [endTime, setEndTime] = React.useState<Date>(new Date());
   const [isLoading, setIsLoading] = React.useState(false);
-  const [chosenClassTypeId, setChosenClassTypeId] = React.useState<number>(0);
   const [classTypes, setClassTypes] = React.useState<ClassType[]>([]);
 
   React.useEffect(() => {
@@ -38,18 +38,18 @@ export const ResponsiveDatePickers = (props: Props) => {
 
   const onSearch = () => {
     setIsLoading((currentState: boolean) => !currentState);
-    const startDate = new Date(chosenDate.valueOf());
-    const endDate = new Date(chosenDate.valueOf());
+    const startDate = new Date(props.chosenDate.valueOf());
+    const endDate = new Date(props.chosenDate.valueOf());
 
-    startDate.setHours(startTime.getHours());
-    startDate.setMinutes(startTime.getHours());
-    startDate.setSeconds(startTime.getHours());
+    startDate.setHours(props.startTime.getHours());
+    startDate.setMinutes(props.startTime.getHours());
+    startDate.setSeconds(props.startTime.getHours());
 
-    endDate.setHours(endTime.getHours());
-    endDate.setMinutes(endTime.getHours());
-    endDate.setSeconds(endTime.getHours());
+    endDate.setHours(props.endTime.getHours());
+    endDate.setMinutes(props.endTime.getHours());
+    endDate.setSeconds(props.endTime.getHours());
 
-    props.handleSearchClasses(startDate, endDate, chosenClassTypeId);
+    props.handleSearchClasses(startDate, endDate);
   };
 
   return (
@@ -61,9 +61,9 @@ export const ResponsiveDatePickers = (props: Props) => {
           </Typography>
           <MobileDatePicker
             label="יום אירוע"
-            value={chosenDate}
+            value={props.chosenDate}
             onChange={(newDate) => {
-              setChosenDate(newDate!);
+              props.setChosenDate(newDate!);
             }}
             renderInput={(params) => <TextField {...params} />}
             inputFormat={"dd/MM/yyyy"}
@@ -73,9 +73,9 @@ export const ResponsiveDatePickers = (props: Props) => {
           </Typography>
           <MobileTimePicker
             label="שעת התחלה"
-            value={startTime}
+            value={props.startTime}
             onChange={(newTime) => {
-              setStartTime(newTime!);
+              props.setStartTime(newTime!);
             }}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -84,9 +84,9 @@ export const ResponsiveDatePickers = (props: Props) => {
           </Typography>
           <MobileTimePicker
             label="שעת סיום"
-            value={endTime}
+            value={props.endTime}
             onChange={(newTime) => {
-              setEndTime(newTime!);
+              props.setEndTime(newTime!);
             }}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -96,11 +96,13 @@ export const ResponsiveDatePickers = (props: Props) => {
           <FormControl>
             <InputLabel id="classTypeLabel">סוג כיתה</InputLabel>
             <Select
-              value={chosenClassTypeId}
+              value={props.chosenClassTypeId}
               labelId={"classTypeLabel"}
               label={"סוג כיתה"}
               onChange={(event) =>
-                setChosenClassTypeId(parseInt(event.target.value as string))
+                props.setChosenClassTypeId(
+                  parseInt(event.target.value as string)
+                )
               }
             >
               {classTypes.map((classType) => (

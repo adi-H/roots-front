@@ -40,4 +40,13 @@ export class ClassAssignService {
       return false;
     }
   }
+
+  public static async addClassAssign(classAssign: ClassAssign) {
+    try {
+      await axiosInstance.post("/classAssign", classAssign);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

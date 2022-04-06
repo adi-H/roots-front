@@ -1,18 +1,16 @@
-import ReactCardFlip from "react-card-flip";
+import { CardActionArea, createTheme } from "@mui/material";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import { CardActionArea } from "@mui/material";
-import { createTheme } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
+import ReactCardFlip from "react-card-flip";
 import { Class } from "../../../types/types";
 
 const theme = createTheme({
@@ -30,6 +28,7 @@ const theme = createTheme({
 type Props = {
   classInfo: Class;
   isPluga: boolean;
+  handleAssignClass: (eventName: string) => void;
 };
 
 const plugaCardColor = "#88D498";
@@ -37,6 +36,7 @@ const gdudCardColor = "#F06543";
 
 export const ClassCard = (props: Props) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [eventName, setEventName] = useState("");
 
   const flipCard = () => {
     setIsFlipped((currentState) => !currentState);
@@ -50,6 +50,11 @@ export const ClassCard = (props: Props) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const onAssignClassClick = () => {
+    props.handleAssignClass(eventName);
+    handleClose();
   };
 
   return (
@@ -111,13 +116,15 @@ export const ClassCard = (props: Props) => {
             autoFocus
             margin="dense"
             id="name"
+            value={eventName}
+            onChange={(event) => setEventName(event.target.value as string)}
             label="שם האירוע"
             fullWidth
             variant="standard"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>שריין</Button>
+          <Button onClick={onAssignClassClick}>שריין</Button>
           <Button onClick={handleClose}>בטל</Button>
         </DialogActions>
       </Dialog>
