@@ -10,6 +10,7 @@
 
 stages:
   - build  
+  - deploy
 # This file is a template, and might need editing before it works on your project.
 # To contribute improvements to CI/CD templates, please follow the Development guide at:
 # https://docs.gitlab.com/ee/development/cicd/templates.html
@@ -24,6 +25,12 @@ stages:
 
 variables:
   CI_REGISTRY_IMAGE: "omridim/roots-front"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_HOST: tcp://docker:2376
+  KUBECONFIG: ".k3s.yaml"
+#  DOCKER_HOST: "tcp://docker:2376"
 
 docker-build:
   # Use the official docker image.
@@ -31,14 +38,24 @@ docker-build:
   stage: build
   services:
     - docker:dind
+  # services:
+  #   - docker:dind
   # Default branch leaves tag empty (= latest tag)
   # All other branches are tagged with the escaped branch name (commit ref slug)
-  script:
+  before_script:
     - docker login -u omridim -p 49c418f2-cac3-4a57-81ad-e7d31268e476
-    - tag=":$CI_COMMIT_REF_SLUG"
+  script:
     - echo "Running on branch '$CI_COMMIT_BRANCH'"
-    - docker build --pull -t "$CI_REGISTRY_IMAGE${tag}" .
-    - docker push "$CI_REGISTRY_IMAGE${tag}"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:${CI_COMMIT_SHA}" -f Dockerfile.prod .
+    - docker push "$CI_REGISTRY_IMAGE:${CI_COMMIT_SHA}"
   only:
-    - ci-cd
+    - main
 
+helm-upgrade:
+  stage: deploy
+  image: alpine/helm:3.2.1
+  script:
+    # - cd ci/k3s/roots-front
+    - helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag="${CI_COMMIT_SHA}"
+  only:
+    - main
