@@ -9,6 +9,7 @@ import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
 import { Login } from "./Screens/Login/Login";
 import { User } from "./types/types";
+import { SocketIOService } from "./Services/SocketIOService";
 
 type Props = {};
 
@@ -35,7 +36,9 @@ function App(props: Props) {
   }, []);
 
   const storeUserContext = () => {
-    setLoggedUser(getUserContext());
+    const user = getUserContext();
+    SocketIOService.auth(document.cookie.split("=")[1]);
+    setLoggedUser(user);
   };
 
   return (

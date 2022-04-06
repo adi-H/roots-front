@@ -17,6 +17,7 @@ export interface User {
   phoneNumber: string;
   team: Unit;
   role: Role;
+  attendance: Attendance;
 }
 
 export interface ClassAssign {
@@ -39,10 +40,17 @@ export interface Unit {
   name: string;
   parent: Unit;
   children: Unit[];
+  teamCadets?: User[];
 }
 
 export interface Url {
   id: number;
   name: string;
   url: string;
+}
+
+export interface Attendance {
+  id: number;
+  reason: string;
+  inAttendance: boolean;
 }
