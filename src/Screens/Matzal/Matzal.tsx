@@ -4,13 +4,16 @@ import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { SocketIOService } from "../../Services/SocketIOService";
 import { UnitService } from "../../Services/UnitService";
 import { Utilities } from "../../Services/Utilities";
-import { Unit } from "../../types/types";
+import { Attendance, Unit } from "../../types/types";
 import { AddCadetModal } from "./AddCadetModal/AddCadetModal";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import styles from "./Matzal.module.css";
-import { KeyboardDoubleArrowRightOutlined } from "@mui/icons-material";
+import {
+  AlignHorizontalCenterOutlined,
+  KeyboardDoubleArrowRightOutlined,
+} from "@mui/icons-material";
 import { AttendanceService } from "../../Services/AttendanceService";
 import Swal from "sweetalert2";
 
@@ -29,7 +32,6 @@ export const Matzal = (props: Props) => {
     };
 
     SocketIOService.socket.on("sendCompany", (company: Unit) => {
-      console.log("aaa");
       setCompanyWithCadets(company);
     });
 
@@ -58,11 +60,23 @@ export const Matzal = (props: Props) => {
 
   const handleDeleteAll = async () => {
     try {
-      const updatedCompany = await AttendanceService.clear();
-      setCompanyWithCadets(updatedCompany);
+      await AttendanceService.clear();
       Swal.fire({ title: 'המצ"ל נוקה בהצלחה', icon: "success" });
     } catch (e) {
       Swal.fire({ title: 'קרתה שגיאה בניקוי המצ"ל', icon: "error" });
+    }
+  };
+
+  const handleDeleteAttendance = async (id: string) => {
+    AttendanceService.delete(id);
+  };
+
+  const addAttendances = async (attendances: Attendance[]) => {
+    try {
+      await AttendanceService.addAttendances(attendances);
+      Swal.fire({ title: "הצוערים נוספו בהצלחה", icon: "success" });
+    } catch (e) {
+      Swal.fire({ title: "קרתה שגיאה בהוספת הצוערים", icon: "error" });
     }
   };
 
@@ -171,7 +185,12 @@ export const Matzal = (props: Props) => {
                 >
                   {isEdit && (
                     <IconButton sx={{ padding: 0, marginLeft: "3%" }}>
-                      <DeleteForeverIcon sx={{ color: "white" }} />
+                      <DeleteForeverIcon
+                        onClick={() =>
+                          handleDeleteAttendance(cadet.id.toString())
+                        }
+                        sx={{ color: "white" }}
+                      />
                     </IconButton>
                   )}
                   <Typography
@@ -214,6 +233,7 @@ export const Matzal = (props: Props) => {
       <AddCadetModal
         teams={companyWithCadets?.children}
         isOpen={isModalOpen}
+        handleAddAttendance={addAttendances}
         onClose={() => {
           setIsModalOpen(false);
         }}

@@ -51,7 +51,7 @@ export interface Url {
 }
 
 export interface Attendance {
-  id: number;
+  user: User;
   reason: string;
   inAttendance: boolean;
 }
