@@ -4,12 +4,14 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { RequireAuth } from "./Common/RequireAuth/RequireAuth";
 import { BroshShishi } from "./Screens/BroshShishi/BroshShishi";
+import { Matzal } from "./Screens/Matzal/Matzal";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
 import Classes from "./Screens/Classes/ClassRegister/ClassRegister";
 import Keys from "./Screens/Keys/Keys";
 import { Login } from "./Screens/Login/Login";
 import { User } from "./types/types";
+import { SocketIOService } from "./Services/SocketIOService";
 
 type Props = {};
 
@@ -36,7 +38,9 @@ function App(props: Props) {
   }, []);
 
   const storeUserContext = () => {
-    setLoggedUser(getUserContext());
+    const user = getUserContext();
+    SocketIOService.auth(document.cookie.split("=")[1]);
+    setLoggedUser(user);
   };
 
   return (
@@ -72,6 +76,13 @@ function App(props: Props) {
             }
           />
           <Route
+            path="/matzal"
+            element={
+              <RequireAuth>
+                <Matzal />
+                </RequireAuth>
+            }/>
+            <Route
             path="/class"
             element={
               <RequireAuth>

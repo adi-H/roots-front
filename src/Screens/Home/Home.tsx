@@ -32,7 +32,7 @@ const buttons = [
     text: "אודות",
     icon: KeyIcon,
     backgroundColor: "#CCDAA3",
-    navigateTo: "about",
+    navigateTo: "matzal",
   },
 ];
 
