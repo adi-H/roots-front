@@ -48,20 +48,17 @@ export const Calendar = (props: Props) => {
       const units = await UnitService.getAll();
       await fetchSchedule();
 
+      setSelectedGdudId(
+        loggedUser?.team.parent.parent.id ? loggedUser.team.parent.parent.id : 0
+      );
+      setSelectedPlugaId(
+        loggedUser?.team.parent.id ? loggedUser.team.parent.id : 0
+      );
       setClassRequests(requests);
       setAllUnits(units);
     }
     fetchData();
   }, []);
-
-  useEffect(() => {
-    setSelectedGdudId(
-      loggedUser?.team.parent.parent.id ? loggedUser.team.parent.parent.id : 0
-    );
-    setSelectedPlugaId(
-      loggedUser?.team.parent.id ? loggedUser.team.parent.id : 0
-    );
-  }, [loggedUser]);
 
   useEffect(() => {
     fetchSchedule();

@@ -8,6 +8,7 @@ import { Box, Typography } from "@mui/material";
 
 type Props = {
   foundClasses: Class[];
+  handleAssignClass: (classId: number, reason: string) => void;
 };
 
 export default function Classes(props: Props) {
@@ -32,6 +33,9 @@ export default function Classes(props: Props) {
           <ClassCard
             classInfo={foundClass}
             isPluga={foundClass.owner.id == currentUser.team.parent.id}
+            handleAssignClass={(eventName: string) =>
+              props.handleAssignClass(foundClass.id, eventName)
+            }
           />
         </Grid>
       ));
