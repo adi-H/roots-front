@@ -161,6 +161,7 @@ export const Matzal = (props: Props) => {
               boxShadow: "2",
               textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
             }}
+            key={team.id}
           >
             <Typography
               style={{ color: "white", marginRight: "5%" }}
@@ -182,6 +183,7 @@ export const Matzal = (props: Props) => {
                     borderRadius: "25px",
                     marginBottom: "5%",
                   }}
+                  key={cadet.id}
                 >
                   {isEdit && (
                     <IconButton sx={{ padding: 0, marginLeft: "3%" }}>
