@@ -7,9 +7,11 @@ import { BroshShishi } from "./Screens/BroshShishi/BroshShishi";
 import { Matzal } from "./Screens/Matzal/Matzal";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
+import Kalag from "./Screens/Kalag/Kalag";
 import Classes from "./Screens/Classes/ClassRegister/ClassRegister";
 import Keys from "./Screens/Keys/Keys";
 import { Login } from "./Screens/Login/Login";
+import { Logistics } from "./Screens/Logistics/Logistics";
 import { User } from "./types/types";
 import { SocketIOService } from "./Services/SocketIOService";
 
@@ -68,6 +70,14 @@ function App(props: Props) {
             }
           />
           <Route
+            path="/logistics"
+            element={
+              <RequireAuth>
+                <Logistics />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="/broshShishi"
             element={
               <RequireAuth>
@@ -76,13 +86,22 @@ function App(props: Props) {
             }
           />
           <Route
+            path="/logistics"
+            element={
+              <RequireAuth>
+                <Kalag />
+              </RequireAuth>
+            }
+          />
+
+          <Route
             path="/matzal"
             element={
               <RequireAuth>
                 <Matzal />
-                </RequireAuth>
-            }/>
-            <Route
+              </RequireAuth>
+            } />
+          <Route
             path="/class"
             element={
               <RequireAuth>
