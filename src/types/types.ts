@@ -50,6 +50,21 @@ export interface Url {
   url: string;
 }
 
+export interface Items {
+  id: number;
+  name: String;
+  quantity: number;
+  description: String;
+  startedUseAt: Date;
+  owner: {
+      id: number;
+      name: String;
+  };
+  usedBy: {
+      id: number;
+      name: String;
+  } | null;
+}
 export interface Attendance {
   user: User;
   reason: string;
