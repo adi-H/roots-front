@@ -14,7 +14,7 @@ const buttons = [
     text: "כיתות",
     icon: SchoolIcon,
     backgroundColor: "#A3CDDA",
-    navigateTo: "calendar",
+    navigateTo: "classNavigation",
   },
   {
     text: "לוגיסטיקה",
