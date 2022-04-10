@@ -14,6 +14,7 @@ import { Login } from "./Screens/Login/Login";
 import { Logistics } from "./Screens/Logistics/Logistics";
 import { User } from "./types/types";
 import { SocketIOService } from "./Services/SocketIOService";
+import { ClassNavigation } from "./Screens/ClassNavigation/ClassNavigation";
 
 type Props = {};
 
@@ -86,21 +87,13 @@ function App(props: Props) {
             }
           />
           <Route
-            path="/logistics"
-            element={
-              <RequireAuth>
-                <Kalag />
-              </RequireAuth>
-            }
-          />
-
-          <Route
             path="/matzal"
             element={
               <RequireAuth>
                 <Matzal />
               </RequireAuth>
-            } />
+            }
+          />
           <Route
             path="/class"
             element={
@@ -114,6 +107,14 @@ function App(props: Props) {
             element={
               <RequireAuth>
                 <Keys />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/classNavigation"
+            element={
+              <RequireAuth>
+                <ClassNavigation />
               </RequireAuth>
             }
           />

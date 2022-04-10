@@ -9,39 +9,10 @@ import { ItemsList } from "./Items/ItemsList";
 
 type Props = {};
 
-const itemsListMock: Items[] = [
-  {
-    id: 1,
-    name: "אלמניה",
-    quantity: 10,
-    owner: {
-      id: 1,
-      name: "פלוגה ד"
-    },
-    usedBy: {
-      id: 1,
-      name: "פלוגה ד"
-    },
-    description: "לשטח",
-    startedUseAt: new Date(),
-  },
-  {
-    id: 2,
-    name: "אלמניה",
-    quantity: 20,
-    owner: {
-      id: 1,
-      name: "פלוגה ד"
-    },
-    usedBy: null,
-    description: "",
-    startedUseAt: new Date(),
-  },
-];
-
 export const Logistics = (props: Props) => {
   const [itemsList, setItemsList] = useState<Items[]>([]);
   const user = useAuth();
+
   useEffect(() => {
     getItemsList(user.team.parent.id);
   }, []);
@@ -51,10 +22,31 @@ export const Logistics = (props: Props) => {
     setItemsList(itemsList);
   }
 
+  const handleDeleteItem = (itemId: number) => {
+    setItemsList((currItemsList) => {
+      return currItemsList.filter((item) => item.id !== itemId);
+    });
+  };
+
+  const handleReturnItem = (itemId: number) => {
+    setItemsList((currItemsList) => {
+      return currItemsList.map((item) =>
+        item.id !== itemId ? item : { ...item, usedBy: { ...item.owner } }
+      );
+    });
+  };
+
   return (
     <Paper className={styles.homeContainer} style={{ overflow: "hidden" }}>
       <PageTitle title="לוגיסטיקה" />
-      <ItemsList addItem={() => {}} itemsList={itemsList} />
+      <ItemsList
+        addItem={(items: Items) => {
+          setItemsList((currItemsList) => [...currItemsList, items]);
+        }}
+        itemsList={itemsList}
+        deleteItem={handleDeleteItem}
+        returnItem={handleReturnItem}
+      />
     </Paper>
   );
 };

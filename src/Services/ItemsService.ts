@@ -7,10 +7,20 @@ export class ItemsService {
     return (await axiosInstance.get<Items[]>(`/items/owner/${ownerId}`)).data;
   }
 
-  public static async usingItemes(itemId: number, usedBy: any, quantity: number, description: string) {
+  public static async usingItemes(
+    itemId: number,
+    usedBy: any,
+    quantity: number,
+    description: string
+  ) {
     try {
       // TODO: validations
-      await axiosInstance.post(`/items/use`, {itemId, usedBy, quantity, description})
+      await axiosInstance.post(`/items/use`, {
+        itemId,
+        usedBy,
+        quantity,
+        description,
+      });
     } catch (error) {
       Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
     }
@@ -19,17 +29,36 @@ export class ItemsService {
   public static async deleteUsage(itemId: number) {
     try {
       // TODO: validations
-      alert(itemId)
-      await axiosInstance.delete(`/items/${itemId}`, {})
+      await axiosInstance.delete(`/items/usage/${itemId}`, {});
     } catch (error) {
       Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
     }
   }
 
-  public static async createItem(ownerId: number, quantity: number, name: string) {
+  public static async deleteItem(itemId: number) {
     try {
       // TODO: validations
-      await axiosInstance.put(`/items/create`, {owner: ownerId, quantity, name})
+      await axiosInstance.delete(`/items/${itemId}`, {});
+    } catch (error) {
+      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
+    }
+  }
+
+  public static async createItem(
+    ownerId: number,
+    quantity: number,
+    name: string
+  ) {
+    try {
+      // TODO: validations, potential bug: when adding an item with the same name, it is returned and added to array,
+      // a migration between the two identical items should be made
+      return (
+        await axiosInstance.put<Items>(`/items/create`, {
+          owner: ownerId,
+          quantity,
+          name,
+        })
+      ).data;
     } catch (error) {
       Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
     }
