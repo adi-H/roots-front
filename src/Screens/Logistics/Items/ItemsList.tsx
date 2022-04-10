@@ -1,133 +1,183 @@
-import { Box, Button, Card, Grid, Paper, TextField, Typography } from "@mui/material";
-import { useState } from "react";
-import { Items } from "../../../types/types";
-import styles from "../../Home/Home.module.css";
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  Grid,
+  Typography,
+} from "@mui/material";
 import CardContent from "@mui/material/CardContent";
-import { CardActionArea } from "@mui/material";
+import { useMemo, useState } from "react";
+import { useAuth } from "../../../Hooks/useAuth";
+import { ItemsService } from "../../../Services/ItemsService";
+import { Items } from "../../../types/types";
+import { ExistingItem } from "./Item/ExistingItem";
 import Modal from "./Item/Modal";
 import { NewItem } from "./Item/NewItem";
-import { ExistingItem } from "./Item/ExistingItem";
 
-type Props = { itemsList: Items[], addItem: () => void };
-
-interface ItemsAvailable extends Items {
-  available: number;
+type Props = {
+  itemsList: Items[];
+  addItem: (items: Items) => void;
+  deleteItem: (itemId: number) => void;
+  returnItem: (itemId: number) => void;
 };
 
 export const ItemsList = (props: Props) => {
   const [open, setOpen] = useState(false);
-  const [child, setChild] = useState(<div></div>);
   const [modalTitle, setModalTitle] = useState("");
+  const [chosenItems, setChosenItems] = useState<Items[]>(null!);
+  const currentUser = useAuth();
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const mergedItemsList: ItemsAvailable[] = [];
-  props.itemsList.forEach((items) => {
-    const index = mergedItemsList.findIndex((mergedItems) => {
-      return mergedItems.name == items.name;
-    });
-    if (index === -1) {
-      const mergedItems: ItemsAvailable = { ...items, available: !items.usedBy ? items.quantity : 0 };
-      mergedItemsList.push(mergedItems);
-    } else {
-      mergedItemsList[index].quantity += items.quantity;
-      mergedItemsList[index].available += !items.usedBy ? items.quantity : 0;
-    }
-  });
+  const getAmountOfItems = (items: Items[]) => {
+    let quantity = 0;
+    let available = 0;
 
-  const handleClickOpen = (c: any) => {
-    if (c === null) {
-      let o = (mergedItemsList[0].owner as unknown);
-      setModalTitle("הוספת פריט")
-      setChild(<NewItem close={handleClose} owner={o as number}/>)
-    } else {
-      setModalTitle(c.name)
-      setChild(<ExistingItem close={handleClose} item={c} />)
-    }
-    setOpen(true);
+    items.forEach((item) => {
+      quantity += item.quantity;
+      if (item.usedBy.id === currentUser.team.parent.id) {
+        available += item.quantity;
+      }
+    });
+
+    return { quantity, available };
   };
 
-  const itemsBox = mergedItemsList.map((items) =>
-  (<Grid item>
-    <Card
-      sx={{
-        borderRadius: '25%',
-        height: "100px",
-        width: "100px",
-        backgroundColor: "#C82626B2",
-      }}
-    >
-      <CardActionArea onClick={() => handleClickOpen(items)}>
-        <CardContent>
-          <Typography
-            align="center"
-            sx={{ fontSize: "20px" }}
-            style={{ lineHeight: "75%" }}
-            color="white"
-            gutterBottom
-          >
-            {items.name}
-          </Typography>
-          <Typography
-            align="center"
-            sx={{ fontSize: "12px" }}
-            color="white"
-            gutterBottom
-          >
-            זמין: {items.available}
-          </Typography>
-          <Typography
-            align="center"
-            sx={{ fontSize: "12px" }}
-            color="white"
-            gutterBottom
-          >
-            סה"כ: {items.quantity}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+  const itemsBox = useMemo(() => {
+    const mergedItemsList: Items[][] = [];
+    props.itemsList.forEach((items) => {
+      const index = mergedItemsList.findIndex((mergedItems) => {
+        return mergedItems[0].name == items.name;
+      });
+      if (index === -1) {
+        mergedItemsList.push([items]);
+      } else {
+        mergedItemsList[index] = [...mergedItemsList[index], items];
+      }
+    });
 
-    </Card>
-  </Grid>)
-  );
+    const itemsBox = mergedItemsList.map((items) => {
+      const amountOfItems = getAmountOfItems(items);
 
-  itemsBox.push(
-    <Grid item>
-      <Card
-        sx={{
-          borderRadius: '25%',
-          height: "90px",
-          width: "90px",
-          backgroundColor: "transparent",
-        }}
-        style={{ border: '5px #C82626B2 solid' }}
-      >
-        <CardActionArea onClick={() => handleClickOpen(null)}>
-          <CardContent>
-            <Typography color="#C82626B2" align="center" variant="h2" sx={{ mb: 1.5 }}>
+      return (
+        <Grid item key={items[0].name}>
+          <Card
+            sx={{
+              borderRadius: "25%",
+              height: "100px",
+              width: "100px",
+              backgroundColor: "#C82626B2",
+            }}
+          >
+            <CardActionArea
+              onClick={() => {
+                setChosenItems(items);
+                setModalTitle(items[0].name);
+                setOpen(true);
+              }}
+            >
+              <CardContent>
+                <Typography
+                  align="center"
+                  sx={{ fontSize: "20px" }}
+                  style={{ lineHeight: "75%" }}
+                  color="white"
+                  gutterBottom
+                >
+                  {items[0].name}
+                </Typography>
+                <Typography
+                  align="center"
+                  sx={{ fontSize: "12px" }}
+                  color="white"
+                  gutterBottom
+                >
+                  זמין: {amountOfItems.available}
+                </Typography>
+                <Typography
+                  align="center"
+                  sx={{ fontSize: "12px" }}
+                  color="white"
+                  gutterBottom
+                >
+                  סה"כ: {amountOfItems.quantity}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      );
+    });
+
+    itemsBox.push(
+      <Grid key="add" item>
+        <Card
+          sx={{
+            borderRadius: "25%",
+            height: "90px",
+            width: "90px",
+            backgroundColor: "transparent",
+          }}
+          style={{ border: "5px #C82626B2 solid" }}
+        >
+          <Button
+            sx={{ height: "100%", width: "100%" }}
+            onClick={() => {
+              setChosenItems(null!);
+              setOpen(true);
+              setModalTitle("הוספת פריט");
+            }}
+          >
+            <Typography color="#C82626B2" align="center" variant="h2">
               +
             </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Grid>
-  );
+          </Button>
+        </Card>
+      </Grid>
+    );
+    return itemsBox;
+  }, [props.itemsList]);
+
+  const handleCreateItem = async (
+    ownerId: number,
+    quantity: number,
+    name: string
+  ) => {
+    const createdItem = await ItemsService.createItem(ownerId, quantity, name);
+    props.addItem(createdItem!);
+    handleClose();
+  };
 
   return (
-    <Paper className={styles.homeContainer}>
-      <Grid container
+    <Box>
+      <Grid
+        container
         spacing={3}
         alignItems="center"
-        justifyContent={'space-around'}
+        justifyContent={"space-around"}
       >
         {itemsBox}
       </Grid>
 
       <Modal isOpen={open} handleClose={handleClose} title={modalTitle}>
-        {child}
+        {chosenItems ? (
+          <ExistingItem
+            close={handleClose}
+            items={chosenItems}
+            deleteItem={props.deleteItem}
+            returnItem={props.returnItem}
+          />
+        ) : (
+          <NewItem
+            onCreateItem={handleCreateItem}
+            close={handleClose}
+            owner={currentUser.team.parent.id}
+          />
+        )}
       </Modal>
-    </Paper>
+    </Box>
   );
 };

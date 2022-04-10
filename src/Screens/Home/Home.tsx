@@ -4,6 +4,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ArticleIcon from "@mui/icons-material/Article";
 import ROOTS_LOGO from "../../Images/rootsLogo.png";
 import styles from "./Home.module.css";
 
@@ -29,8 +30,8 @@ const buttons = [
     navigateTo: "broshShishi",
   },
   {
-    text: "אודות",
-    icon: KeyIcon,
+    text: 'מצ"ל',
+    icon: ArticleIcon,
     backgroundColor: "#CCDAA3",
     navigateTo: "matzal",
   },

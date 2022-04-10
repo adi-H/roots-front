@@ -1,8 +1,8 @@
-import { Button } from "@mui/material";
+import { Button, SxProps, Theme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BACK_BUTTON from "../../Images/backButton.png";
 
-type Props = { height?: string; width?: string };
+type Props = { height?: string; width?: string; sx?: SxProps<Theme> };
 
 export const BackButton = (props: Props) => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ export const BackButton = (props: Props) => {
         padding: 0,
         borderRadius: "100%",
         boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
+        ...props.sx,
       }}
     />
   );
