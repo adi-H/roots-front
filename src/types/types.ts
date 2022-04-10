@@ -52,18 +52,12 @@ export interface Url {
 
 export interface Items {
   id: number;
-  name: String;
+  name: string;
   quantity: number;
-  description: String;
+  description: string;
   startedUseAt: Date;
-  owner: {
-      id: number;
-      name: String;
-  };
-  usedBy: {
-      id: number;
-      name: String;
-  } | null;
+  owner: Unit;
+  usedBy: Unit;
 }
 export interface Attendance {
   user: User;

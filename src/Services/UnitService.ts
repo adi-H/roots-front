@@ -9,4 +9,9 @@ export class UnitService {
   public static async getCadetsInCompany() {
     return (await axiosInstance.get<Unit>("/unit/allCadetsInCompany")).data;
   }
+
+  public static async getCompaniesByGdud(gdudId: number) {
+    return (await axiosInstance.get<Unit[]>(`/unit/companiesByGdud/${gdudId}`))
+      .data;
+  }
 }
