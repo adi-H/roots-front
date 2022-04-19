@@ -5,8 +5,11 @@ import WarehouseIcon from "@mui/icons-material/Warehouse";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArticleIcon from "@mui/icons-material/Article";
+import MailIcon from '@mui/icons-material/Mail';
 import ROOTS_LOGO from "../../Images/rootsLogo.png";
 import styles from "./Home.module.css";
+import { InquiryModal } from "./InquiryModal/InquiryModal";
+import { useState } from "react";
 
 type Props = {};
 
@@ -38,6 +41,7 @@ const buttons = [
 ];
 
 export const Home = (props: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -93,6 +97,10 @@ export const Home = (props: Props) => {
           ))}
         </Box>
       </Box>
+      <Button onClick={() => setIsModalOpen(true)} className={styles.inquiryButton} startIcon={<MailIcon />}>
+        תיבת פניות
+      </Button>
+      <InquiryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </Paper>
   );
 };
