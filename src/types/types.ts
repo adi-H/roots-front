@@ -68,3 +68,18 @@ export interface ClassType {
   id: number;
   name: string;
 }
+
+export interface Recipient {
+  id: number;
+  name: string;
+  email: string;
+  phoneNumber?: string;
+}
+
+export interface Inquiry {
+  id?: number;
+  to: Recipient;
+  from: User;
+  title: string;
+  content: string;
+}
