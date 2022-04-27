@@ -6,6 +6,7 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArticleIcon from "@mui/icons-material/Article";
 import MailIcon from '@mui/icons-material/Mail';
+import ShareIcon from '@mui/icons-material/Share';
 import ROOTS_LOGO from "../../Images/rootsLogo.png";
 import styles from "./Home.module.css";
 import { InquiryModal } from "./InquiryModal/InquiryModal";
@@ -23,7 +24,7 @@ const buttons = [
   {
     text: "לוגיסטיקה",
     icon: WarehouseIcon,
-    backgroundColor: "#DAA3A3",
+    backgroundColor: "#eea3a3",
     navigateTo: "logistics",
   },
   {
@@ -56,13 +57,21 @@ export const Home = (props: Props) => {
         <Box
           sx={{
             display: "flex",
-            width: "50%",
+            width: "80%",
             flexWrap: "wrap",
             marginTop: "10%",
           }}
         >
+          <Box sx={{ display: 'flex', justifyContent: 'space-around', flexBasis: '100%', marginBottom: '10%' }}>
+            <Button onClick={() => window.open("https://www.idf.il/", "_blank")} className={styles.topButton} startIcon={<ShareIcon />}>
+              אתר צה״ל
+            </Button>
+            <Button onClick={() => window.open("https://campus.digital.idf.il/course/view.php?id=531", "_blank")} className={styles.topButton} startIcon={<ShareIcon />}>
+              מודל
+            </Button>
+          </Box>
           {buttons.map((button, index) => (
-            <div style={{ flexBasis: "100%" }}>
+            <div style={{ flexBasis: "50%" }}>
               <Button
                 variant="contained"
                 style={{
@@ -70,7 +79,9 @@ export const Home = (props: Props) => {
                   height: "13vh",
                   width: "13vh",
                   marginTop: "8%",
-                  marginRight: index % 2 === 0 ? "auto" : 0,
+                  marginRight: "auto",
+                  marginLeft: "auto",
+                  marginBottom: '15%',
                   borderRadius: "100%",
                   backgroundColor: button.backgroundColor,
                   boxShadow:
