@@ -1,3 +1,7 @@
+.swal2-container.swal2-backdrop-show {
+  z-index: 2000;
+}
+
 .App {
   text-align: center;
 }
