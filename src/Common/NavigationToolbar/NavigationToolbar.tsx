@@ -1,7 +1,20 @@
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
-import React, { useState } from "react";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  styled,
+} from "@mui/material";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { NavigationRoute } from "../../App";
+
+const StyledBottomNavigationAction = styled(BottomNavigationAction)(
+  ({ theme }) => ({
+    minWidth: "10px",
+    [theme.breakpoints.down("sm")]: {
+      transform: "scale(0.8)",
+    },
+  })
+);
 
 type Props = {
   navigationRoutes: NavigationRoute[];
@@ -30,7 +43,7 @@ const NavigationToolbar = ({ navigationRoutes }: Props) => {
           label &&
           value &&
           icon && (
-            <BottomNavigationAction
+            <StyledBottomNavigationAction
               key={value}
               label={label}
               value={value}
