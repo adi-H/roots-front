@@ -1,4 +1,11 @@
-import { Dialog, DialogTitle, Grid, Typography } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import {
+  Dialog,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import ClassInfoProperty from "./ClassInfoProperty";
 
@@ -47,11 +54,17 @@ const CalendarItemInfo = ({
       open={open}
       PaperProps={{ sx: { borderRadius: "15px" } }}
     >
+      <IconButton
+        sx={{ position: "absolute", top: 0, left: 0 }}
+        onClick={handleClose}
+      >
+        <Close />
+      </IconButton>
       <Grid container sx={{ padding: 4 }}>
         {properties.map(
           ({ title, content, important }, index) =>
             content !== undefined && (
-              <Grid item key={index} xs={6} textAlign="center" mt={2} mb={2}>
+              <Grid item key={index} xs={6} textAlign="center" mt={1} mb={1}>
                 <ClassInfoProperty
                   title={title}
                   content={content}
