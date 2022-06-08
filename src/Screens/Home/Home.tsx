@@ -11,6 +11,7 @@ import ROOTS_LOGO from "../../Images/rootsLogo.png";
 import styles from "./Home.module.css";
 import { InquiryModal } from "./InquiryModal/InquiryModal";
 import { useState } from "react";
+import { PageTitle } from "../../Common/PageTitle/PageTitle";
 
 type Props = {};
 
@@ -47,6 +48,7 @@ export const Home = (props: Props) => {
 
   return (
     <Paper className={styles.homeContainer}>
+      <PageTitle title="בית" showBackButton={false} />
       <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
         <div style={{ flexBasis: "100%", marginTop: "8%" }}>
           <img

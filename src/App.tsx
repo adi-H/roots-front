@@ -15,12 +15,29 @@ import { Logistics } from "./Screens/Logistics/Logistics";
 import { User } from "./types/types";
 import { SocketIOService } from "./Services/SocketIOService";
 import { ClassNavigation } from "./Screens/ClassNavigation/ClassNavigation";
+import {
+  Newspaper,
+  Article,
+  Favorite,
+  Home as HomeIcon,
+  LocationOn,
+  Restore,
+  School,
+  Warehouse,
+} from "@mui/icons-material";
+import NavigationToolbar from "./Common/NavigationToolbar/NavigationToolbar";
 
-type Props = {};
+export type NavigationRoute = {
+  path: string;
+  element: JSX.Element;
+  label?: string;
+  value?: string;
+  icon?: React.ReactNode;
+};
 
 export const UserContext = React.createContext<User>(null!);
 
-function App(props: Props) {
+function App() {
   const getUserContext = (): User => {
     const base64Url = document.cookie.split("=")[1];
 
@@ -46,80 +63,102 @@ function App(props: Props) {
     setLoggedUser(user);
   };
 
+  const navigationRoutes: NavigationRoute[] = [
+    {
+      path: "/broshShishi",
+      element: (
+        <RequireAuth>
+          <BroshShishi />
+        </RequireAuth>
+      ),
+      label: "ברושישי",
+      value: "broshishi",
+      icon: <Newspaper />,
+    },
+    {
+      path: "/matzal",
+      element: (
+        <RequireAuth>
+          <Matzal />
+        </RequireAuth>
+      ),
+      label: 'מצ"ל',
+      value: "matzal",
+      icon: <Article />,
+    },
+    {
+      path: "/",
+      element: (
+        <RequireAuth>
+          <Home />
+        </RequireAuth>
+      ),
+      label: "בית",
+      value: "home",
+      icon: <HomeIcon />,
+    },
+    {
+      path: "/classNavigation",
+      element: (
+        <RequireAuth>
+          <ClassNavigation />
+        </RequireAuth>
+      ),
+      label: "כיתות",
+      value: "classes",
+      icon: <School />,
+    },
+    {
+      path: "/logistics",
+      element: (
+        <RequireAuth>
+          <Logistics />
+        </RequireAuth>
+      ),
+      label: "לוגיסטיקה",
+      value: "logistics",
+      icon: <Warehouse />,
+    },
+    {
+      path: "/login",
+      element: <Login storeUserContext={storeUserContext} />,
+    },
+    {
+      path: "/calendar",
+      element: (
+        <RequireAuth>
+          <Calendar />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/class",
+      element: (
+        <RequireAuth>
+          <Classes />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/key",
+      element: (
+        <RequireAuth>
+          <Keys />
+        </RequireAuth>
+      ),
+    },
+  ];
+
   return (
     <UserContext.Provider value={loggedUser}>
       <>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <Home />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/login"
-            element={<Login storeUserContext={storeUserContext} />}
-          />
-          <Route
-            path="/calendar"
-            element={
-              <RequireAuth>
-                <Calendar />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/logistics"
-            element={
-              <RequireAuth>
-                <Logistics />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/broshShishi"
-            element={
-              <RequireAuth>
-                <BroshShishi />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/matzal"
-            element={
-              <RequireAuth>
-                <Matzal />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/class"
-            element={
-              <RequireAuth>
-                <Classes />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/key"
-            element={
-              <RequireAuth>
-                <Keys />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/classNavigation"
-            element={
-              <RequireAuth>
-                <ClassNavigation />
-              </RequireAuth>
-            }
-          />
+          {navigationRoutes.map(({ path, element }) => (
+            <Route path={path} element={element} />
+          ))}
         </Routes>
       </>
+      <NavigationToolbar navigationRoutes={navigationRoutes} />
     </UserContext.Provider>
   );
 }
