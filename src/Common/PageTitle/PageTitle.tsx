@@ -1,32 +1,45 @@
-import { Box, Paper, Typography } from "@mui/material";
-import { BackButton } from "./BackButton";
+import { AppBar, Box, Paper, Stack, Typography } from "@mui/material";
+import { styled } from "@mui/system";
+import PageTitleBackButton from "./PageTitleBackButton";
+import { PageTitleLogo } from "./PageTitleLogo";
 
-type Props = { title: string };
+const StyledPageTitleText = styled(Typography)(({ theme }) => ({
+  color: "black",
+  fontWeight: "bold",
+  textAlign: "center",
+  flexGrow: 1,
+  fontSize: "1rem",
+  [theme.breakpoints.up("md")]: {
+    fontSize: "1.5rem",
+  },
+  [theme.breakpoints.up("lg")]: {
+    fontSize: "2rem",
+  },
+}));
+
+type Props = { title: string; showBackButton?: boolean };
 
 export const PageTitle = (props: Props) => {
+  const showBackButton = props.showBackButton ?? true;
+
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-      <Paper
-        sx={{
-          backgroundColor: "rgba(66, 66, 66, 0.7)",
-          borderRadius: "0px 25px 25px 0px",
-          width: "60%",
-          margin: "8% 0 8% 0",
-          boxShadow: "2",
-          textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        <Typography
-          style={{ color: "white", marginRight: "4%" }}
-          fontWeight={"bold"}
-          fontSize={"2rem"}
+    <>
+      <Box sx={{ height: 0, mb: "10vh" }}></Box>
+      <AppBar elevation={3} sx={{ background: "white" }}>
+        <Stack
+          direction={"row"}
+          justifyContent="space-evenly"
+          alignItems="center"
         >
-          {props.title}
-        </Typography>
-      </Paper>
-      <Box sx={{ display: "flex", width: "15%", alignItems: "center" }}>
-        <BackButton />
-      </Box>
-    </Box>
+          <Box sx={{ width: "20px", margin: "0 4vw 0 0" }}>
+            {showBackButton && <PageTitleBackButton />}
+          </Box>
+          <StyledPageTitleText>{props.title}</StyledPageTitleText>
+          <Box sx={{ width: "20px", margin: "0 2vw" }}>
+            <PageTitleLogo />
+          </Box>
+        </Stack>
+      </AppBar>
+    </>
   );
 };
