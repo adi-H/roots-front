@@ -5,8 +5,8 @@ import WarehouseIcon from "@mui/icons-material/Warehouse";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArticleIcon from "@mui/icons-material/Article";
-import MailIcon from '@mui/icons-material/Mail';
-import ShareIcon from '@mui/icons-material/Share';
+import MailIcon from "@mui/icons-material/Mail";
+import ShareIcon from "@mui/icons-material/Share";
 import ROOTS_LOGO from "../../Images/rootsLogo.png";
 import styles from "./Home.module.css";
 import { InquiryModal } from "./InquiryModal/InquiryModal";
@@ -62,16 +62,36 @@ export const Home = (props: Props) => {
             marginTop: "10%",
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'space-around', flexBasis: '100%', marginBottom: '10%' }}>
-            <Button onClick={() => window.open("https://www.idf.il/", "_blank")} className={styles.topButton} startIcon={<ShareIcon />}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              flexBasis: "100%",
+              marginBottom: "10%",
+            }}
+          >
+            <Button
+              onClick={() => window.open("https://www.idf.il/", "_blank")}
+              className={styles.topButton}
+              startIcon={<ShareIcon />}
+            >
               אתר צה״ל
             </Button>
-            <Button onClick={() => window.open("https://campus.digital.idf.il/course/view.php?id=531", "_blank")} className={styles.topButton} startIcon={<ShareIcon />}>
+            <Button
+              onClick={() =>
+                window.open(
+                  "https://campus.digital.idf.il/course/view.php?id=531",
+                  "_blank"
+                )
+              }
+              className={styles.topButton}
+              startIcon={<ShareIcon />}
+            >
               מודל
             </Button>
           </Box>
           {buttons.map((button, index) => (
-            <div style={{ flexBasis: "50%" }}>
+            <div key={index} style={{ flexBasis: "50%" }}>
               <Button
                 variant="contained"
                 style={{
@@ -81,7 +101,7 @@ export const Home = (props: Props) => {
                   marginTop: "8%",
                   marginRight: "auto",
                   marginLeft: "auto",
-                  marginBottom: '15%',
+                  marginBottom: "15%",
                   borderRadius: "100%",
                   backgroundColor: button.backgroundColor,
                   boxShadow:
@@ -108,10 +128,17 @@ export const Home = (props: Props) => {
           ))}
         </Box>
       </Box>
-      <Button onClick={() => setIsModalOpen(true)} className={styles.inquiryButton} startIcon={<MailIcon />}>
+      <Button
+        onClick={() => setIsModalOpen(true)}
+        className={styles.inquiryButton}
+        startIcon={<MailIcon />}
+      >
         תיבת פניות
       </Button>
-      <InquiryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <InquiryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Paper>
   );
 };
