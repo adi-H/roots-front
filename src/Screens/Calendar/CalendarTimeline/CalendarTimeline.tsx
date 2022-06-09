@@ -3,6 +3,7 @@ import { format, isSameDay } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import vis from "vis";
 import { ClassAssign } from "../../../types/types";
+import "./CalendarTimeline.css";
 
 const SchedulerContainer = styled(Box)(() => ({
   height: "500px",
@@ -18,6 +19,12 @@ type Props = {
   handleTimelineItemClick(properties: TimelineItemProps): void;
 };
 
+const itemStyles: Record<string, string>[] = [
+  { background: "#CEE8FF" },
+  { background: "#F9B9B9" },
+  { background: "#C2F1B2" },
+];
+
 const CalendarTimeline = ({
   schedule,
   selectedDay,
@@ -26,8 +33,6 @@ const CalendarTimeline = ({
   const timelineContainer = useRef<HTMLElement>();
   const [timeline, setTimeline] = useState<vis.Timeline | null>(null);
   const [timelineDate, setTimelineDate] = useState<Date>(selectedDay);
-  const backgroundColors = ["#74B8F8", "#C26F6F", "#85AC85"];
-
   // Initialize the timeline
   useEffect(() => {
     if (timelineContainer.current) {
@@ -69,7 +74,19 @@ const CalendarTimeline = ({
             groups[groupId] = {
               id: groupId,
               content: `כיתה ${classAssign.assignedClass.name} בניין ${classAssign.assignedClass.building.name}`,
+              style: `color: black;`,
             };
+          }
+
+          let styleString = `
+            border-radius: 10px;
+            padding: 4px 32px;
+            color: black;
+            border: none;`;
+          const styles = itemStyles[index % itemStyles.length];
+
+          for (const styleKey in styles) {
+            styleString += `${styleKey}: ${styles[styleKey]}`;
           }
 
           return {
@@ -78,10 +95,7 @@ const CalendarTimeline = ({
               classAssign.startDate,
               "HH:mm"
             )}`,
-            style: `
-            background: ${backgroundColors[index % backgroundColors.length]};
-            padding: 4px 32px;
-            `,
+            style: styleString,
             start: classAssign.startDate,
             end: classAssign.endDate,
             group: groupId,
@@ -106,13 +120,17 @@ const CalendarTimeline = ({
       showCurrentTime: true,
       showMajorLabels: false,
       zoomable: false,
-      zoomMin: 1000 * 60 * 300,
-      zoomMax: 1000 * 60 * 300,
-      minHeight: "100%",
+      timeAxis: { scale: "minute", step: 30 },
+      zoomMin: 1000 * 60 * 100,
+      zoomMax: 1000 * 60 * 100,
       min: workStartDate,
       max: workEndDate,
       start: workStartDate,
       end: workEndDate,
+      margin: {
+        axis: 50,
+        item: 60,
+      },
     };
   }
 

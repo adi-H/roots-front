@@ -21,7 +21,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Unit } from "../../../types/types";
 import { format, isSameDay } from "date-fns";
 import { he } from "date-fns/locale";
@@ -43,6 +43,21 @@ const DateChip = styled(Chip)(() => ({
 const StyledFormControl = styled(FormControl)(() => ({
   width: "30%",
   minWidth: "100px",
+}));
+
+const SpacedStack = styled(Stack)(({ theme }) => ({
+  width: "100%",
+  marginBottom: "25px",
+  [theme.breakpoints.up("md")]: {
+    marginBottom: "35px",
+  },
+  [theme.breakpoints.up("lg")]: {
+    marginBottom: "45px",
+  },
+}));
+
+const DateStack = styled(SpacedStack)(() => ({
+  overflowX: "auto",
 }));
 
 const DAY_IN_MILLISECONDS = 86400 * 1000;
@@ -69,12 +84,7 @@ export const CalendarForm = (props: Props) => {
           justifyContent: "space-around",
         }}
       >
-        <Stack
-          direction="row"
-          sx={{ width: "100%", mt: 2, mb: 2 }}
-          justifyContent="center"
-          spacing={9}
-        >
+        <SpacedStack direction="row" justifyContent="center" spacing={9} mt={4}>
           <StyledFormControl>
             <InputLabel id="gdudLabel">גדוד</InputLabel>
             <Select
@@ -115,14 +125,9 @@ export const CalendarForm = (props: Props) => {
               ))}
             </Select>
           </StyledFormControl>
-        </Stack>
+        </SpacedStack>
       </Box>
-      <Stack
-        sx={{ width: "100%", overflowX: "auto", mb: 1 }}
-        alignItems="center"
-        direction="row"
-        spacing={1}
-      >
+      <DateStack alignItems="center" direction="row" spacing={1}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             value={props.selectedDay}
@@ -184,7 +189,7 @@ export const CalendarForm = (props: Props) => {
             }}
           />
         ))}
-      </Stack>
+      </DateStack>
       <Typography fontWeight="bold">
         {format(props.selectedDay, "d בMMM, y", {
           locale: he,

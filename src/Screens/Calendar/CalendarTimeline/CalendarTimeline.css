@@ -1,0 +1,17 @@
+.vis-label {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.vis-text {
+    color: black !important;
+}
+
+.vis-minor {
+    text-align: center;
+}
+
+.vis-group {
+    min-width: 150px;
+}
