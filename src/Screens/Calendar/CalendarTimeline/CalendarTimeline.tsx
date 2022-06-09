@@ -23,6 +23,7 @@ const itemStyles: Record<string, string>[] = [
   { background: "#CEE8FF" },
   { background: "#F9B9B9" },
   { background: "#C2F1B2" },
+  { background: "#FBFBAA" },
 ];
 
 const CalendarTimeline = ({
