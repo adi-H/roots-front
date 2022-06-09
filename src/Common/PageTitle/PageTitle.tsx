@@ -1,4 +1,12 @@
-import { AppBar, Box, Paper, Stack, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Paper,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { styled } from "@mui/system";
 import PageTitleBackButton from "./PageTitleBackButton";
 import { PageTitleLogo } from "./PageTitleLogo";
@@ -8,7 +16,7 @@ const StyledPageTitleText = styled(Typography)(({ theme }) => ({
   fontWeight: "bold",
   textAlign: "center",
   flexGrow: 1,
-  fontSize: "1rem",
+  fontSize: "1.25rem",
   [theme.breakpoints.up("md")]: {
     fontSize: "1.5rem",
   },
@@ -21,11 +29,23 @@ type Props = { title: string; showBackButton?: boolean };
 
 export const PageTitle = (props: Props) => {
   const showBackButton = props.showBackButton ?? true;
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.up("sm"));
+  const md = useMediaQuery(theme.breakpoints.up("md"));
+  const lg = useMediaQuery(theme.breakpoints.up("lg"));
+  const APPBAR_HEIGHT = lg ? "60px" : md ? "55px" : sm ? "50px" : "50px";
 
   return (
     <>
-      <Box sx={{ height: 0, mb: "10vh" }}></Box>
-      <AppBar elevation={3} sx={{ background: "white" }}>
+      <Box sx={{ height: 0, mb: APPBAR_HEIGHT }}></Box>
+      <AppBar
+        elevation={3}
+        sx={{
+          height: APPBAR_HEIGHT,
+          background: "white",
+          justifyContent: "center",
+        }}
+      >
         <Stack
           direction={"row"}
           justifyContent="space-evenly"
