@@ -2,145 +2,90 @@ import KeyIcon from "@mui/icons-material/Key";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import SchoolIcon from "@mui/icons-material/School";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Stack, styled, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArticleIcon from "@mui/icons-material/Article";
 import MailIcon from "@mui/icons-material/Mail";
 import ShareIcon from "@mui/icons-material/Share";
 import ROOTS_LOGO from "../../Images/rootsLogo.png";
-import styles from "./Home.module.css";
+import HOME_BACKGROUND from "../../Images/homeBackground.png";
 import { InquiryModal } from "./InquiryModal/InquiryModal";
 import { useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
+import { CenteredFlexBox } from "../../Common/CenteredFlexBox/CenteredFlexBox";
 
-type Props = {};
+const HomeButton = styled(Button)(({ theme }) => ({
+  width: "60%",
+  maxWidth: "600px",
+  marginTop: theme.spacing(4),
+  boxShadow: "0px 0px 5px 1px #00000033",
+  color: "#555",
+}));
 
-const buttons = [
-  {
-    text: "כיתות",
-    icon: SchoolIcon,
-    backgroundColor: "#A3CDDA",
-    navigateTo: "classNavigation",
-  },
-  {
-    text: "לוגיסטיקה",
-    icon: WarehouseIcon,
-    backgroundColor: "#eea3a3",
-    navigateTo: "logistics",
-  },
-  {
-    text: "ברושישי",
-    icon: NewspaperIcon,
-    backgroundColor: "#EAD773",
-    navigateTo: "broshShishi",
-  },
-  {
-    text: 'מצ"ל',
-    icon: ArticleIcon,
-    backgroundColor: "#CCDAA3",
-    navigateTo: "matzal",
-  },
-];
-
-export const Home = (props: Props) => {
+export const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
-    <Paper className={styles.homeContainer}>
+    <Stack>
       <PageTitle title="בית" showBackButton={false} />
-      <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
-        <div style={{ flexBasis: "100%", marginTop: "8%" }}>
-          <img
-            src={ROOTS_LOGO}
-            style={{ display: "block", width: "65%", margin: "auto" }}
-          />
-        </div>
-        <Box
-          sx={{
-            display: "flex",
-            width: "80%",
-            flexWrap: "wrap",
-            marginTop: "10%",
+      <CenteredFlexBox>
+        <div
+          style={{
+            position: "relative",
+            maxWidth: "800px",
+            height: "max-content",
+            background: "#B3FF52",
+            backgroundImage: `url(${HOME_BACKGROUND})`,
+            borderRadius: "0 0 50px 50px",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-around",
-              flexBasis: "100%",
-              marginBottom: "10%",
+          <img
+            alt="לוגו"
+            src={ROOTS_LOGO}
+            style={{
+              display: "block",
+              width: "100%",
+              margin: "auto",
             }}
-          >
-            <Button
-              onClick={() => window.open("https://www.idf.il/", "_blank")}
-              className={styles.topButton}
-              startIcon={<ShareIcon />}
-            >
-              אתר צה״ל
-            </Button>
-            <Button
-              onClick={() =>
-                window.open(
-                  "https://campus.digital.idf.il/course/view.php?id=531",
-                  "_blank"
-                )
-              }
-              className={styles.topButton}
-              startIcon={<ShareIcon />}
-            >
-              מודל
-            </Button>
-          </Box>
-          {buttons.map((button, index) => (
-            <div key={index} style={{ flexBasis: "50%" }}>
-              <Button
-                variant="contained"
-                style={{
-                  display: "block",
-                  height: "13vh",
-                  width: "13vh",
-                  marginTop: "8%",
-                  marginRight: "auto",
-                  marginLeft: "auto",
-                  marginBottom: "15%",
-                  borderRadius: "100%",
-                  backgroundColor: button.backgroundColor,
-                  boxShadow:
-                    "0 2px 7px rgb(0 0 0 / 20%), inset 0 0 4px rgb(0 0 0 / 20%)",
-                }}
-                onClick={() => navigate(`/${button.navigateTo}`)}
-              >
-                <Typography
-                  color={"black"}
-                  fontWeight={"bold"}
-                  fontSize={"0.8rem"}
-                  style={{
-                    marginTop: "20%",
-                    marginLeft: "-100%",
-                    marginRight: "-100%",
-                    textAlign: "center",
-                  }}
-                >
-                  {button.text}
-                </Typography>
-                <button.icon fontSize="large" style={{ color: "black" }} />
-              </Button>
-            </div>
-          ))}
-        </Box>
-      </Box>
-      <Button
-        onClick={() => setIsModalOpen(true)}
-        className={styles.inquiryButton}
-        startIcon={<MailIcon />}
-      >
-        תיבת פניות
-      </Button>
+          />
+        </div>
+      </CenteredFlexBox>
+      <CenteredFlexBox alignItems="center" flexDirection={"column"}>
+        <HomeButton
+          onClick={() => window.open("https://www.idf.il/", "_blank")}
+          startIcon={<ShareIcon />}
+        >
+          אתר צה״ל
+        </HomeButton>
+        <HomeButton
+          onClick={() =>
+            window.open(
+              "https://campus.digital.idf.il/course/view.php?id=531",
+              "_blank"
+            )
+          }
+          startIcon={<ShareIcon />}
+        >
+          מודל
+        </HomeButton>
+        <HomeButton
+          variant="contained"
+          style={{
+            backgroundColor: "#575757",
+            color: "#FFFFFF",
+          }}
+          disableRipple
+          onClick={() => setIsModalOpen(true)}
+          startIcon={<MailIcon />}
+        >
+          תיבת פניות
+        </HomeButton>
+      </CenteredFlexBox>
       <InquiryModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-    </Paper>
+    </Stack>
   );
 };

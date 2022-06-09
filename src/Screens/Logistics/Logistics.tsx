@@ -4,7 +4,6 @@ import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { useAuth } from "../../Hooks/useAuth";
 import { ItemsService } from "../../Services/ItemsService";
 import { Items } from "../../types/types";
-import styles from "../Home/Home.module.css";
 import { ItemsList } from "./Items/ItemsList";
 
 type Props = {};
@@ -37,7 +36,7 @@ export const Logistics = (props: Props) => {
   };
 
   return (
-    <Paper className={styles.homeContainer} style={{ overflow: "hidden" }}>
+    <Paper style={{ overflow: "hidden" }}>
       <PageTitle title="לוגיסטיקה" />
       <ItemsList
         addItem={(items: Items) => {
