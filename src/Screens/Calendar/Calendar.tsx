@@ -179,7 +179,6 @@ export const Calendar = () => {
         {...dialogData}
         handleClose={handleItemInfoDialogClose}
       />
-      )
     </>
   );
 };

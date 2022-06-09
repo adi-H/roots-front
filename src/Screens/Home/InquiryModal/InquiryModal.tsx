@@ -1,12 +1,16 @@
+import { Close } from "@mui/icons-material";
 import {
   Box,
   Button,
   Dialog,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Paper,
   Select,
+  Stack,
+  styled,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,30 +21,18 @@ import { InquiryService } from "../../../Services/InquiryService";
 import { RecipientService } from "../../../Services/RecipientService";
 import { Recipient, User } from "../../../types/types";
 
-/**
- * .textFieldWithNoBorder fieldset {
-  border: none;
-}
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  width: "80%",
+}));
 
-.sendButton {
-  width: 60px;
-  height: 60px;
-  border-radius: 100% !important;
-  background-color: white !important;
-  position: fixed !important;
-  font-weight: bold !important;
-  font-size: 1rem !important;
-  color: black !important;
-  line-height: 1.1 !important;
-  bottom: 29%;
-  right: 81%;
-  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 10%);
-}
-
-.sendButton:focus {
-  background-color: white;
-}
- */
+const SendButton = styled(Button)(() => ({
+  position: "absolute",
+  bottom: 0,
+  left: "50%",
+  transform: "translate(-50%, 50%)",
+  width: "50%",
+  borderRadius: "20px",
+}));
 
 type Props = {
   isOpen: boolean;
@@ -86,14 +78,20 @@ export const InquiryModal = (props: Props) => {
       PaperProps={{
         sx: {
           overflow: "inherit",
-          backgroundColor: "#a3cdda",
-          borderRadius: "20px",
+          backgroundColor: "#fff",
+          borderRadius: "10px",
         },
       }}
       fullWidth
       open={props.isOpen}
       onClose={props.onClose}
     >
+      <IconButton
+        sx={{ position: "absolute", top: 0, left: 0 }}
+        onClick={props.onClose}
+      >
+        <Close />
+      </IconButton>
       <Paper
         sx={{
           backgroundColor: "white",
@@ -114,33 +112,10 @@ export const InquiryModal = (props: Props) => {
           תיבת פניות
         </Typography>
       </Paper>
-      <Box sx={{ display: "flex", marginBottom: "10%" }}>
-        <Paper
-          sx={{
-            backgroundColor: "black",
-            borderRadius: "0 25px 25px 0",
-            width: "30%",
-            boxShadow: "0 4px 4px 0 rgb(0 0 0 / 25%)",
-            textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <Typography
-            sx={{ paddingLeft: "35%", marginTop: "12%" }}
-            fontWeight="bold"
-            fontSize="1.3rem"
-            color="white"
-          >
-            אל
-          </Typography>
-        </Paper>
-        <Box sx={{ width: "10%" }} />
-        <FormControl sx={{ width: "50%" }}>
+      <Stack alignItems="center" spacing={1} mb={4}>
+        <StyledFormControl>
           <InputLabel id="recipientLabel">אל</InputLabel>
           <Select
-            sx={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-            }}
             labelId="gdudLabel"
             label="אל"
             value={recipientId}
@@ -154,68 +129,32 @@ export const InquiryModal = (props: Props) => {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
-      </Box>
-      <Box sx={{ display: "flex", marginBottom: "10%" }}>
-        <Paper
-          sx={{
-            backgroundColor: "black",
-            borderRadius: "0 25px 25px 0",
-            width: "30%",
-            boxShadow: "0 4px 4px 0 rgb(0 0 0 / 25%)",
-            textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <Typography
-            sx={{ paddingLeft: "35%", marginTop: "12%" }}
-            fontWeight="bold"
-            fontSize="1.3rem"
-            color="white"
-          >
-            נושא
-          </Typography>
-        </Paper>
-        <Box sx={{ width: "10%" }} />
-        <FormControl sx={{ width: "50%" }}>
+        </StyledFormControl>
+        <StyledFormControl>
           <TextField
-            sx={{ borderRadius: "20px", backgroundColor: "white" }}
             label="נושא"
             value={title}
             onChange={(event) => setTitle(event.target.value as string)}
           />
-        </FormControl>
-      </Box>
-      <Box sx={{ display: "flex", marginBottom: "10%" }}>
-        <Paper
-          sx={{
-            backgroundColor: "black",
-            borderRadius: "0 25px 25px 0",
-            width: "30%",
-            boxShadow: "0 4px 4px 0 rgb(0 0 0 / 25%)",
-            textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <Typography
-            sx={{ paddingLeft: "35%", marginTop: "12%" }}
-            fontWeight="bold"
-            fontSize="1.3rem"
-            color="white"
-          >
-            תוכן
-          </Typography>
-        </Paper>
-        <Box sx={{ width: "10%" }} />
-        <FormControl sx={{ width: "50%" }}>
+        </StyledFormControl>
+        <StyledFormControl>
           <TextField
-            sx={{ borderRadius: "20px", backgroundColor: "white" }}
             label="תוכן"
             multiline
             value={content}
             onChange={(event) => setContent(event.target.value as string)}
           />
-        </FormControl>
-      </Box>
-      <Button onClick={handleInquirySubmit}>שלח פנייה</Button>
+        </StyledFormControl>
+      </Stack>
+      <SendButton
+        variant="contained"
+        style={{
+          background: "#222",
+        }}
+        onClick={handleInquirySubmit}
+      >
+        שלח פנייה
+      </SendButton>
     </Dialog>
   );
 };

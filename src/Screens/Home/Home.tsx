@@ -5,7 +5,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
 import ShareIcon from "@mui/icons-material/Share";
 import ROOTS_LOGO from "../../Images/rootsLogo.png";
@@ -27,6 +26,7 @@ const HomeButton = styled(Button)(({ theme }) => ({
 }));
 
 const HomeWelcomeText = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
   fontWeight: "600",
   fontSize: "2rem",
@@ -42,9 +42,6 @@ export const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const bigHeader = useMediaQuery(`(min-width:${MAX_WIDTH})`);
   const user = useAuth();
-  const navigate = useNavigate();
-
-  console.log(user);
 
   return (
     <Stack height="100%">
