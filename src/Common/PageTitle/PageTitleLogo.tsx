@@ -15,6 +15,7 @@ export const PageTitleLogo = () => {
       style={{
         backgroundSize: "cover",
         height: "5vh",
+        maxHeight: "40px",
         padding: 0,
         cursor: "pointer",
       }}

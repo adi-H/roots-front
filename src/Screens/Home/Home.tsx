@@ -1,10 +1,11 @@
-import KeyIcon from "@mui/icons-material/Key";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
-import SchoolIcon from "@mui/icons-material/School";
-import WarehouseIcon from "@mui/icons-material/Warehouse";
-import { Box, Button, Paper, Stack, styled, Typography } from "@mui/material";
+import {
+  Button,
+  Stack,
+  styled,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ArticleIcon from "@mui/icons-material/Article";
 import MailIcon from "@mui/icons-material/Mail";
 import ShareIcon from "@mui/icons-material/Share";
 import ROOTS_LOGO from "../../Images/rootsLogo.png";
@@ -13,6 +14,9 @@ import { InquiryModal } from "./InquiryModal/InquiryModal";
 import { useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { CenteredFlexBox } from "../../Common/CenteredFlexBox/CenteredFlexBox";
+import { useAuth } from "../../Hooks/useAuth";
+
+const MAX_WIDTH = "800px";
 
 const HomeButton = styled(Button)(({ theme }) => ({
   width: "60%",
@@ -22,22 +26,38 @@ const HomeButton = styled(Button)(({ theme }) => ({
   color: "#555",
 }));
 
+const HomeWelcomeText = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  fontWeight: "600",
+  fontSize: "2rem",
+  [theme.breakpoints.up("md")]: {
+    fontSize: "2.5rem",
+  },
+  [theme.breakpoints.up("lg")]: {
+    fontSize: "3rem",
+  },
+}));
+
 export const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const bigHeader = useMediaQuery(`(min-width:${MAX_WIDTH})`);
+  const user = useAuth();
   const navigate = useNavigate();
 
+  console.log(user);
+
   return (
-    <Stack>
+    <Stack height="100%">
       <PageTitle title="בית" showBackButton={false} />
-      <CenteredFlexBox>
+      <CenteredFlexBox alignItems="center">
         <div
           style={{
             position: "relative",
-            maxWidth: "800px",
+            width: "100%",
             height: "max-content",
             background: "#B3FF52",
             backgroundImage: `url(${HOME_BACKGROUND})`,
-            borderRadius: "0 0 50px 50px",
+            borderRadius: bigHeader ? "0" : "0 0 50px 50px",
           }}
         >
           <img
@@ -46,10 +66,14 @@ export const Home = () => {
             style={{
               display: "block",
               width: "100%",
+              maxWidth: MAX_WIDTH,
               margin: "auto",
             }}
           />
         </div>
+      </CenteredFlexBox>
+      <CenteredFlexBox>
+        <HomeWelcomeText>ברוכים הבאים, {user.firstName}</HomeWelcomeText>
       </CenteredFlexBox>
       <CenteredFlexBox alignItems="center" flexDirection={"column"}>
         <HomeButton
