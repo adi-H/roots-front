@@ -8,8 +8,13 @@
     color: black !important;
 }
 
-.vis-minor {
-    text-align: center;
+.vis-time-axis.vis-background {
+    display: none;
+}
+
+.vis-time-axis.vis-foreground {
+    background: white;
+    z-index: 2;
 }
 
 .vis-group {
