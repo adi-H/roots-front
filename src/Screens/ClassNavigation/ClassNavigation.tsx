@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Paper,
   Stack,
   Typography,
   useTheme,
@@ -19,7 +18,7 @@ export const ClassNavigation = () => {
   const lg = theme.breakpoints.up("lg");
 
   return (
-    <Paper className={styles.container}>
+    <Box className={styles.container}>
       <PageTitle title="כיתות"></PageTitle>
       <Stack alignItems="center">
         <Typography
@@ -83,6 +82,6 @@ export const ClassNavigation = () => {
       >
         לו"ז כיתות ובקשות
       </Button>
-    </Paper>
+    </Box>
   );
 };

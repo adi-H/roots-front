@@ -1,13 +1,9 @@
-import { Box, styled } from "@mui/material";
+import { Box } from "@mui/material";
 import { format, isSameDay } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import vis from "vis";
 import { ClassAssign } from "../../../types/types";
 import "./CalendarTimeline.css";
-
-const SchedulerContainer = styled(Box)(() => ({
-  height: "500px",
-}));
 
 export type TimelineItemProps = {
   item: number | null;
@@ -135,7 +131,7 @@ const CalendarTimeline = ({
     };
   }
 
-  return <SchedulerContainer ref={timelineContainer} />;
+  return <Box ref={timelineContainer} />;
 };
 
 export default CalendarTimeline;

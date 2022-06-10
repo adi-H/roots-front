@@ -1,4 +1,13 @@
-import { Box, Button, IconButton, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Stack,
+  IconButton,
+  Paper,
+  styled,
+  Typography,
+  TypographyProps,
+} from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { SocketIOService } from "../../Services/SocketIOService";
@@ -12,14 +21,71 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import styles from "./Matzal.module.css";
 import {
   AlignHorizontalCenterOutlined,
+  CleaningServices,
   KeyboardDoubleArrowRightOutlined,
+  PersonRemove,
 } from "@mui/icons-material";
 import { AttendanceService } from "../../Services/AttendanceService";
 import Swal from "sweetalert2";
+import { CenteredFlexBox } from "../../Common/CenteredFlexBox/CenteredFlexBox";
+import HOME_BACKGROUND from "../../Images/homeBackground.png";
+import MATZAL_HEADER_SHAPE from "../../Images/matzalHeaderShape.svg";
 
-type Props = {};
+const MaskedBox = styled(Box)(({ theme }) => ({
+  position: "relative",
+  width: "85%",
+  minWidth: "200px",
+  maxWidth: "600px",
+  aspectRatio: "100 / 53",
+  backgroundColor: "#00D1AC",
+  backgroundImage: `url(${HOME_BACKGROUND})`,
+  maskImage: `url(${MATZAL_HEADER_SHAPE})`,
+}));
+
+const StyledActionButton = styled(IconButton)(({ theme }) => ({
+  background: "#00D1AC",
+  position: "absolute",
+  top: "69%",
+  borderRadius: "100%",
+  width: "15%",
+  aspectRatio: "1 / 1",
+}));
+
+const AddCadetButton = styled(StyledActionButton)(({ theme }) => ({
+  right: "25%",
+  transform: "translateX(50%)",
+}));
+
+const ClearCadetsButton = styled(StyledActionButton)(({ theme }) => ({
+  left: "25%",
+  transform: "translateX(-50%)",
+}));
+
+const MatzalHeaderInfoText = styled(Typography)(({ theme }) => ({
+  fontWeight: "bold",
+  fontSize: "3rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "2rem",
+  },
+  m: 0,
+}));
+
+const MatzalHeaderInfoLabel = styled((props: TypographyProps) => (
+  /** @ts-ignore Apparantly an error within MUI https://github.com/mui/material-ui/issues/20373 */
+  <Typography {...props} component="div" />
+))(({ theme }) => ({
+  display: "block",
+  position: "relative",
+  color: "white",
+  textAlign: "center",
+  fontSize: "2rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "1.5rem",
+  },
+}));
+
 // TODO: this component needs to be separated as soon as possible - lack of time :(
-export const Matzal = (props: Props) => {
+export const Matzal = () => {
   const [companyWithCadets, setCompanyWithCadets] = useState<Unit>(null!);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -81,9 +147,52 @@ export const Matzal = (props: Props) => {
   };
 
   return (
-    <Paper className={styles.container}>
-      <Box sx={{ height: "100%" }}>
-        <PageTitle title={'מצ"ל לחייל'} />
+    <>
+      <PageTitle title={'מצ"ל לחייל'} showBackButton={false} />
+      <CenteredFlexBox>
+        <MaskedBox>
+          <Stack
+            height="80%"
+            direction="row"
+            justifyContent="space-evenly"
+            alignItems="center"
+          >
+            <MatzalHeaderInfoLabel>
+              <MatzalHeaderInfoText>
+                {numberOfCadetsDetails.amountOfAbsent}
+              </MatzalHeaderInfoText>
+              חסרים
+            </MatzalHeaderInfoLabel>
+            <MatzalHeaderInfoLabel>
+              <MatzalHeaderInfoText>
+                {numberOfCadetsDetails.amountOfCadets -
+                  numberOfCadetsDetails.amountOfAbsent}
+              </MatzalHeaderInfoText>
+              מצ"ן
+            </MatzalHeaderInfoLabel>
+            <MatzalHeaderInfoLabel>
+              <MatzalHeaderInfoText>
+                {numberOfCadetsDetails.amountOfCadets}
+              </MatzalHeaderInfoText>
+              מצ"ל
+            </MatzalHeaderInfoLabel>
+          </Stack>
+          <AddCadetButton
+            style={{
+              background: "#F6E971",
+            }}
+          >
+            <PersonRemove sx={{ color: "white" }} />
+          </AddCadetButton>
+          <ClearCadetsButton
+            style={{
+              background: "#DF6E6E",
+            }}
+          >
+            <CleaningServices sx={{ color: "white" }} />
+          </ClearCadetsButton>
+        </MaskedBox>
+        {/* <Box sx={{ height: "100%" }}>
         <Paper
           sx={{
             display: "flex",
@@ -245,7 +354,8 @@ export const Matzal = (props: Props) => {
             setIsModalOpen(false);
           }}
         ></AddCadetModal>
-      </Box>
-    </Paper>
+      </Box> */}
+      </CenteredFlexBox>
+    </>
   );
 };

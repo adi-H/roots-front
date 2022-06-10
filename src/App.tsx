@@ -7,7 +7,6 @@ import { BroshShishi } from "./Screens/BroshShishi/BroshShishi";
 import { Matzal } from "./Screens/Matzal/Matzal";
 import { Calendar } from "./Screens/Calendar/Calendar";
 import { Home } from "./Screens/Home/Home";
-import Kalag from "./Screens/Kalag/Kalag";
 import Classes from "./Screens/Classes/ClassRegister/ClassRegister";
 import Keys from "./Screens/Keys/Keys";
 import { Login } from "./Screens/Login/Login";
@@ -26,6 +25,7 @@ import {
   Warehouse,
 } from "@mui/icons-material";
 import NavigationToolbar from "./Common/NavigationToolbar/NavigationToolbar";
+import { Box, Stack } from "@mui/material";
 
 export type NavigationRoute = {
   path: string;
@@ -151,14 +151,16 @@ function App() {
 
   return (
     <UserContext.Provider value={loggedUser}>
-      <>
-        <Routes>
-          {navigationRoutes.map(({ path, element }) => (
-            <Route path={path} element={element} />
-          ))}
-        </Routes>
-      </>
-      <NavigationToolbar navigationRoutes={navigationRoutes} />
+      <Stack height="100%">
+        <Box sx={{ flex: "1 1 auto" }}>
+          <Routes>
+            {navigationRoutes.map(({ path, element }, index) => (
+              <Route key={index} path={path} element={element} />
+            ))}
+          </Routes>
+        </Box>
+        <NavigationToolbar navigationRoutes={navigationRoutes} />
+      </Stack>
     </UserContext.Provider>
   );
 }

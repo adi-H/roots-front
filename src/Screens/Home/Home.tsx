@@ -20,14 +20,14 @@ const MAX_WIDTH = "800px";
 const HomeButton = styled(Button)(({ theme }) => ({
   width: "60%",
   maxWidth: "600px",
-  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(4),
   boxShadow: "0px 0px 5px 1px #00000033",
   color: "#555",
 }));
 
 const HomeWelcomeText = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
+  marginBottom: theme.spacing(6),
   fontWeight: "600",
   fontSize: "2rem",
   [theme.breakpoints.up("md")]: {
@@ -44,69 +44,71 @@ export const Home = () => {
   const user = useAuth();
 
   return (
-    <Stack height="100%">
+    <>
       <PageTitle title="בית" showBackButton={false} />
-      <CenteredFlexBox alignItems="center">
-        <div
-          style={{
-            position: "relative",
-            width: "100%",
-            height: "max-content",
-            background: "#B3FF52",
-            backgroundImage: `url(${HOME_BACKGROUND})`,
-            borderRadius: bigHeader ? "0" : "0 0 50px 50px",
-          }}
-        >
-          <img
-            alt="לוגו"
-            src={ROOTS_LOGO}
+      <Stack>
+        <CenteredFlexBox alignItems="center">
+          <div
             style={{
-              display: "block",
+              position: "relative",
               width: "100%",
-              maxWidth: MAX_WIDTH,
-              margin: "auto",
+              height: "max-content",
+              background: "#B3FF52",
+              backgroundImage: `url(${HOME_BACKGROUND})`,
+              borderRadius: bigHeader ? "0" : "0 0 50px 50px",
             }}
-          />
-        </div>
-      </CenteredFlexBox>
-      <CenteredFlexBox>
-        <HomeWelcomeText>ברוכים הבאים, {user.firstName}</HomeWelcomeText>
-      </CenteredFlexBox>
-      <CenteredFlexBox alignItems="center" flexDirection={"column"}>
-        <HomeButton
-          onClick={() => window.open("https://www.idf.il/", "_blank")}
-          startIcon={<ShareIcon />}
-        >
-          אתר צה״ל
-        </HomeButton>
-        <HomeButton
-          onClick={() =>
-            window.open(
-              "https://campus.digital.idf.il/course/view.php?id=531",
-              "_blank"
-            )
-          }
-          startIcon={<ShareIcon />}
-        >
-          מודל
-        </HomeButton>
-        <HomeButton
-          variant="contained"
-          style={{
-            backgroundColor: "#575757",
-            color: "#FFFFFF",
-          }}
-          disableRipple
-          onClick={() => setIsModalOpen(true)}
-          startIcon={<MailIcon />}
-        >
-          תיבת פניות
-        </HomeButton>
-      </CenteredFlexBox>
-      <InquiryModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-    </Stack>
+          >
+            <img
+              alt="לוגו"
+              src={ROOTS_LOGO}
+              style={{
+                display: "block",
+                width: "100%",
+                maxWidth: MAX_WIDTH,
+                margin: "auto",
+              }}
+            />
+          </div>
+        </CenteredFlexBox>
+        <CenteredFlexBox>
+          <HomeWelcomeText>ברוכים הבאים, {user.firstName}</HomeWelcomeText>
+        </CenteredFlexBox>
+        <CenteredFlexBox alignItems="center" flexDirection={"column"}>
+          <HomeButton
+            onClick={() => window.open("https://www.idf.il/", "_blank")}
+            startIcon={<ShareIcon />}
+          >
+            אתר צה״ל
+          </HomeButton>
+          <HomeButton
+            onClick={() =>
+              window.open(
+                "https://campus.digital.idf.il/course/view.php?id=531",
+                "_blank"
+              )
+            }
+            startIcon={<ShareIcon />}
+          >
+            מודל
+          </HomeButton>
+          <HomeButton
+            variant="contained"
+            style={{
+              backgroundColor: "#575757",
+              color: "#FFFFFF",
+            }}
+            disableRipple
+            onClick={() => setIsModalOpen(true)}
+            startIcon={<MailIcon />}
+          >
+            תיבת פניות
+          </HomeButton>
+        </CenteredFlexBox>
+        <InquiryModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      </Stack>
+    </>
   );
 };
