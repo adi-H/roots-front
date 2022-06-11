@@ -9,7 +9,6 @@ import {
 import { Box, Button, Divider, Paper, styled } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { useAuth } from "../../Hooks/useAuth";
 import { ClassAssignService } from "../../Services/ClassAssignService";
@@ -27,6 +26,7 @@ import CalendarItemInfo, {
 import CalendarTimeline, {
   TimelineItemProps,
 } from "./CalendarTimeline/CalendarTimeline";
+import { toast } from "react-toastify";
 
 const filterAndMapAppointments = (
   appointments: ClassAssign[],
@@ -110,7 +110,7 @@ export const Calendar = () => {
       );
       await fetchSchedule();
     } catch (e) {
-      Swal.fire({ title: "קרתה שגיאה באישור הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה באישור הבקשה");
     }
   };
 
@@ -123,7 +123,7 @@ export const Calendar = () => {
         )
       );
     } catch (e) {
-      Swal.fire({ title: "קרתה שגיאה בדחיית הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה בדחיית הבקשה");
     }
   };
 

@@ -1,11 +1,5 @@
 import { Close } from "@mui/icons-material";
-import {
-  Dialog,
-  DialogTitle,
-  Grid,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Dialog, Grid, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import ClassInfoProperty from "./ClassInfoProperty";
 

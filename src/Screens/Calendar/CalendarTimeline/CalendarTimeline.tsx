@@ -83,7 +83,7 @@ const CalendarTimeline = ({
           const styles = itemStyles[index % itemStyles.length];
 
           for (const styleKey in styles) {
-            styleString += `${styleKey}: ${styles[styleKey]}`;
+            styleString += `${styleKey}: ${styles[styleKey]};`;
           }
 
           return {

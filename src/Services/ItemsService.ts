@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 import { Items } from "../types/types";
 import { axiosInstance } from "./AxiosInstance";
 
@@ -22,7 +22,7 @@ export class ItemsService {
         description,
       });
     } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה בשליחת הבקשה");
     }
   }
 
@@ -31,7 +31,7 @@ export class ItemsService {
       // TODO: validations
       await axiosInstance.delete(`/items/usage/${itemId}`, {});
     } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה בשליחת הבקשה");
     }
   }
 
@@ -40,7 +40,7 @@ export class ItemsService {
       // TODO: validations
       await axiosInstance.delete(`/items/${itemId}`, {});
     } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה בשליחת הבקשה");
     }
   }
 
@@ -60,7 +60,7 @@ export class ItemsService {
         })
       ).data;
     } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה בשליחת הבקשה");
     }
   }
 }

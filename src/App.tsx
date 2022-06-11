@@ -26,6 +26,8 @@ import {
 } from "@mui/icons-material";
 import NavigationToolbar from "./Common/NavigationToolbar/NavigationToolbar";
 import { Box, Stack } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export type NavigationRoute = {
   path: string;
@@ -159,6 +161,18 @@ function App() {
             ))}
           </Routes>
         </Box>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          theme="colored"
+          closeOnClick
+          rtl
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         {loggedUser && (
           <NavigationToolbar navigationRoutes={navigationRoutes} />
         )}

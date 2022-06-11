@@ -23,10 +23,10 @@ import {
   PersonRemove,
 } from "@mui/icons-material";
 import { AttendanceService } from "../../Services/AttendanceService";
-import Swal from "sweetalert2";
 import { CenteredFlexBox } from "../../Common/CenteredFlexBox/CenteredFlexBox";
 import HOME_BACKGROUND from "../../Images/homeBackground.png";
 import MATZAL_HEADER_SHAPE from "../../Images/matzalHeaderShape.svg";
+import { toast } from "react-toastify";
 
 const MaskedBox = styled(Box)(({ theme }) => ({
   position: "relative",
@@ -119,9 +119,9 @@ export const Matzal = () => {
     try {
       await AttendanceService.clear();
       setExpanded([]);
-      Swal.fire({ title: 'המצ"ל נוקה בהצלחה', icon: "success" });
+      toast.success('המצ"ל נוקה בהצלחה');
     } catch (e) {
-      Swal.fire({ title: 'קרתה שגיאה בניקוי המצ"ל', icon: "error" });
+      toast.error('אירעה שגיאה בניקוי המצ"ל');
     }
   };
 
@@ -132,9 +132,11 @@ export const Matzal = () => {
   const addAttendances = async (attendances: Attendance[]) => {
     try {
       await AttendanceService.addAttendances(attendances);
-      Swal.fire({ title: "הצוערים נוספו בהצלחה", icon: "success" });
+      toast.success(
+        attendances.length === 1 ? "הצוער נוסף בהצלחה" : "הצוערים נוספו בהצלחה"
+      );
     } catch (e) {
-      Swal.fire({ title: "קרתה שגיאה בהוספת הצוערים", icon: "error" });
+      toast.error("אירעה שגיאה בהוספת הצוערים");
     }
   };
 
@@ -244,7 +246,7 @@ export const Matzal = () => {
                     <Delete />
                   </IconButton>
                   <Typography fontSize={"1.2rem"}>
-                    {`${Utilities.getFullName(cadet)}`}
+                    {Utilities.getFullName(cadet)}
                   </Typography>
                   <Typography fontSize={"1rem"} color="text.secondary">
                     {cadet.attendance.reason}

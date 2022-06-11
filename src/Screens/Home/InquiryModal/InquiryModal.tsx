@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 import { useAuth } from "../../../Hooks/useAuth";
 import { InquiryService } from "../../../Services/InquiryService";
 import { RecipientService } from "../../../Services/RecipientService";
@@ -66,10 +66,10 @@ export const InquiryModal = (props: Props) => {
         to: { id: recipientId } as Recipient,
       });
       props.onClose();
-      Swal.fire({ title: "הפנייה נשלחה בהצלחה", icon: "success" });
+      toast.success("הפנייה נשלחה בהצלחה");
     } catch (e) {
       props.onClose();
-      Swal.fire({ title: "קרתה שגיאה בשליחת הפנייה", icon: "error" });
+      toast.error("אירעה שגיאה בשליחת הפנייה");
     }
   };
 

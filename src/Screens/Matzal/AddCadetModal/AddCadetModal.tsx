@@ -92,7 +92,7 @@ export const AddCadetModal = (props: Props) => {
           sx={{
             display: "flex",
             justifyContent: "right",
-            mt: "8px",
+            mt: "16px",
           }}
         >
           <Button onClick={onAddAttendancesClick}>הוספת צוער</Button>
