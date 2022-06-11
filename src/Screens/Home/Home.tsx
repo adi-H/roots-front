@@ -45,7 +45,7 @@ export const Home = () => {
 
   return (
     <>
-      <PageTitle title="בית" showBackButton={false} />
+      <PageTitle title="בית" disableBackButton />
       <Stack>
         <CenteredFlexBox alignItems="center">
           <div

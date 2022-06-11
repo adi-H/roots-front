@@ -1,12 +1,13 @@
 import {
   Box,
-  Button,
   Stack,
   IconButton,
-  Paper,
   styled,
   Typography,
   TypographyProps,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
@@ -15,14 +16,10 @@ import { UnitService } from "../../Services/UnitService";
 import { Utilities } from "../../Services/Utilities";
 import { Attendance, Unit } from "../../types/types";
 import { AddCadetModal } from "./AddCadetModal/AddCadetModal";
-import EditIcon from "@mui/icons-material/Edit";
-import DoneIcon from "@mui/icons-material/Done";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import styles from "./Matzal.module.css";
 import {
-  AlignHorizontalCenterOutlined,
   CleaningServices,
-  KeyboardDoubleArrowRightOutlined,
+  Delete,
+  ExpandMore,
   PersonRemove,
 } from "@mui/icons-material";
 import { AttendanceService } from "../../Services/AttendanceService";
@@ -88,7 +85,7 @@ const MatzalHeaderInfoLabel = styled((props: TypographyProps) => (
 export const Matzal = () => {
   const [companyWithCadets, setCompanyWithCadets] = useState<Unit>(null!);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
+  const [expanded, setExpanded] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchCadets = async () => {
@@ -103,12 +100,6 @@ export const Matzal = () => {
 
     fetchCadets();
   }, []);
-
-  const getAmountOfAbsentInTeam = (team: Unit) => {
-    return team.teamCadets?.filter(
-      (cadet) => cadet.attendance?.inAttendance === false
-    ).length;
-  };
 
   const numberOfCadetsDetails = useMemo(() => {
     let amountOfCadets = 0;
@@ -127,6 +118,7 @@ export const Matzal = () => {
   const handleDeleteAll = async () => {
     try {
       await AttendanceService.clear();
+      setExpanded([]);
       Swal.fire({ title: 'המצ"ל נוקה בהצלחה', icon: "success" });
     } catch (e) {
       Swal.fire({ title: 'קרתה שגיאה בניקוי המצ"ל', icon: "error" });
@@ -146,9 +138,17 @@ export const Matzal = () => {
     }
   };
 
+  const toggleExpand = (id: number) => {
+    setExpanded((expandedState) =>
+      expandedState.includes(id)
+        ? expandedState.filter((teamId) => teamId !== id)
+        : [...expandedState, id]
+    );
+  };
+
   return (
     <>
-      <PageTitle title={'מצ"ל לחייל'} showBackButton={false} />
+      <PageTitle title={'מצ"ל לחייל'} disableBackButton />
       <CenteredFlexBox>
         <MaskedBox>
           <Stack
@@ -181,6 +181,7 @@ export const Matzal = () => {
             style={{
               background: "#F6E971",
             }}
+            onClick={() => setIsModalOpen(true)}
           >
             <PersonRemove sx={{ color: "white" }} />
           </AddCadetButton>
@@ -188,174 +189,80 @@ export const Matzal = () => {
             style={{
               background: "#DF6E6E",
             }}
+            onClick={() => handleDeleteAll()}
           >
             <CleaningServices sx={{ color: "white" }} />
           </ClearCadetsButton>
         </MaskedBox>
-        {/* <Box sx={{ height: "100%" }}>
-        <Paper
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            backgroundColor: "#323232",
-            color: "white",
-            borderRadius: "25px",
-            width: "80%",
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          <Typography fontWeight={"bold"} fontSize={"2rem"}>
-            מצ"ל:{" "}
-            <span style={{ fontWeight: 400 }}>
-              {numberOfCadetsDetails.amountOfCadets}
-            </span>
-          </Typography>
-          <Typography fontWeight={"bold"} fontSize={"2rem"}>
-            מצ"ן:{" "}
-            <span style={{ fontWeight: 400 }}>
-              {numberOfCadetsDetails.amountOfCadets -
-                numberOfCadetsDetails.amountOfAbsent}
-            </span>
-          </Typography>
-          <Typography fontWeight={"bold"} fontSize={"2rem"}>
-            חסרים:{" "}
-            <span style={{ fontWeight: 400 }}>
-              {numberOfCadetsDetails.amountOfAbsent}
-            </span>
-          </Typography>
-        </Paper>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginY: "8%",
-          }}
-        >
-          <Paper
-            sx={{
-              backgroundColor: "#323232",
-              borderRadius: "0px 25px 25px 0px",
-              width: "40%",
-
-              boxShadow: "2",
-              textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            <Typography
-              style={{ color: "white", marginRight: "15%", marginTop: "5%" }}
-              fontWeight={"bold"}
-              fontSize={"1.8rem"}
-            >
-              פירוט:
-            </Typography>
-          </Paper>
-          <Box sx={{ width: "20%" }}>
-            <IconButton
-              onClick={() => setIsEdit((isEdit) => !isEdit)}
-              size="large"
-            >
-              {isEdit ? (
-                <DoneIcon fontSize="large" />
-              ) : (
-                <EditIcon fontSize="large" />
-              )}
-            </IconButton>
-          </Box>
-        </Box>
-        {companyWithCadets?.children.map((team) => (
-          <>
-            <Paper
-              sx={{
-                backgroundColor: "#C82626",
-                borderRadius: "0px 25px 25px 0px",
-                width: "55%",
-                margin: "8% 0 8% 0",
-                boxShadow: "2",
-                textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
-              }}
-              key={team.id}
-            >
-              <Typography
-                style={{ color: "white", marginRight: "5%" }}
-                fontWeight={"bold"}
-                fontSize={"1.8rem"}
-              >
-                {`${team.name} | ${getAmountOfAbsentInTeam(team)} חסרים`}
-              </Typography>
-            </Paper>
-            <Box sx={{ marginLeft: "10%", marginRight: "10%" }}>
-              {team.teamCadets
-                ?.filter((cadet) => cadet.attendance?.inAttendance === false)
-                .map((cadet) => (
-                  <Paper
-                    sx={{
-                      display: "flex",
-                      backgroundColor: "#323232",
-                      color: "white",
-                      borderRadius: "25px",
-                      marginBottom: "5%",
-                    }}
-                    key={cadet.id}
-                  >
-                    {isEdit && (
-                      <IconButton sx={{ padding: 0, marginLeft: "3%" }}>
-                        <DeleteForeverIcon
-                          onClick={() =>
-                            handleDeleteAttendance(cadet.id.toString())
-                          }
-                          sx={{ color: "white" }}
-                        />
-                      </IconButton>
-                    )}
-                    <Typography
-                      sx={{ marginLeft: "5%" }}
-                      fontSize={"1.3rem"}
-                      fontWeight={"bold"}
-                    >
-                      {Utilities.getFullName(cadet)} -{" "}
-                      <Typography
-                        sx={{ display: "inline-block" }}
-                        fontSize={"1.3rem"}
-                      >
-                        {cadet.attendance.reason}
-                      </Typography>
-                    </Typography>
-                  </Paper>
-                ))}
-            </Box>
-          </>
-        ))}
-        <Button
-          sx={{
-            width: "90px",
-            height: "90px",
-            borderRadius: "100%",
-            backgroundColor: "#C82626",
-            position: "fixed",
-            fontWeight: "bold",
-            fontSize: "1.4rem",
-            color: "white",
-            lineHeight: "1.1",
-            bottom: "4%",
-            right: "10%",
-            boxShadow: "0 4px 7px 0 rgb(0 0 0 / 10%)",
-          }}
-          onClick={isEdit ? handleDeleteAll : () => setIsModalOpen(true)}
-        >
-          {isEdit ? "נקה הכול" : "הוספת צוער"}
-        </Button>
-        <AddCadetModal
-          teams={companyWithCadets?.children}
-          isOpen={isModalOpen}
-          handleAddAttendance={addAttendances}
-          onClose={() => {
-            setIsModalOpen(false);
-          }}
-        ></AddCadetModal>
-      </Box> */}
       </CenteredFlexBox>
+      <Typography
+        fontWeight="bold"
+        fontSize={32}
+        sx={{ margin: "4% 0 0 15px" }}
+      >
+        פירוט
+      </Typography>
+      {companyWithCadets?.children.map((team) => {
+        const absentCadets = team.teamCadets
+          ? team.teamCadets.filter(
+              (cadet) => cadet.attendance?.inAttendance === false
+            )
+          : [];
+        const isAbsentCadets = absentCadets.length > 0;
+
+        return (
+          <Accordion
+            key={team.id}
+            expanded={expanded.includes(team.id)}
+            onChange={() => isAbsentCadets && toggleExpand(team.id)}
+          >
+            <AccordionSummary expandIcon={isAbsentCadets && <ExpandMore />}>
+              <Typography sx={{ width: "33%", flexShrink: 0 }}>
+                צוות {team.name}
+              </Typography>
+              <Typography sx={{ color: "text.secondary" }}>
+                {isAbsentCadets ? `${absentCadets.length} חסרים` : "אין חסרים"}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {absentCadets.map((cadet) => (
+                <Stack
+                  key={cadet.id}
+                  direction="row"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <IconButton
+                    onClick={() => {
+                      handleDeleteAttendance(cadet.id.toString());
+
+                      if (absentCadets.length === 1) {
+                        toggleExpand(team.id);
+                      }
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                  <Typography fontSize={"1.2rem"}>
+                    {`${Utilities.getFullName(cadet)}`}
+                  </Typography>
+                  <Typography fontSize={"1rem"} color="text.secondary">
+                    {cadet.attendance.reason}
+                  </Typography>
+                </Stack>
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
+      <AddCadetModal
+        teams={companyWithCadets?.children}
+        isOpen={isModalOpen}
+        handleAddAttendance={addAttendances}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+      />
     </>
   );
 };

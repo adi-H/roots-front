@@ -37,7 +37,7 @@ export const Logistics = (props: Props) => {
 
   return (
     <Paper style={{ overflow: "hidden" }}>
-      <PageTitle title="לוגיסטיקה" />
+      <PageTitle title="לוגיסטיקה" disableBackButton />
       <ItemsList
         addItem={(items: Items) => {
           setItemsList((currItemsList) => [...currItemsList, items]);

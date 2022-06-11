@@ -19,7 +19,7 @@ export const ClassNavigation = () => {
 
   return (
     <Box className={styles.container}>
-      <PageTitle title="כיתות"></PageTitle>
+      <PageTitle title="כיתות" disableBackButton></PageTitle>
       <Stack alignItems="center">
         <Typography
           sx={{

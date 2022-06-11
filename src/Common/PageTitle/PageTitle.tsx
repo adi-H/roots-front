@@ -1,7 +1,6 @@
 import {
   AppBar,
   Box,
-  Paper,
   Stack,
   Typography,
   useMediaQuery,
@@ -25,10 +24,10 @@ const StyledPageTitleText = styled(Typography)(({ theme }) => ({
   },
 }));
 
-type Props = { title: string; showBackButton?: boolean };
+type Props = { title: string; disableBackButton?: boolean };
 
 export const PageTitle = (props: Props) => {
-  const showBackButton = props.showBackButton ?? true;
+  const showBackButton = !props.disableBackButton;
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.up("sm"));
   const md = useMediaQuery(theme.breakpoints.up("md"));

@@ -159,7 +159,9 @@ function App() {
             ))}
           </Routes>
         </Box>
-        <NavigationToolbar navigationRoutes={navigationRoutes} />
+        {loggedUser && (
+          <NavigationToolbar navigationRoutes={navigationRoutes} />
+        )}
       </Stack>
     </UserContext.Provider>
   );
