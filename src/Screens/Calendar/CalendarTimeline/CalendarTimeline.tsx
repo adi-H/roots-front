@@ -12,6 +12,7 @@ export type TimelineItemProps = {
 type Props = {
   schedule: ClassAssign[];
   selectedDay: Date;
+  includePluga?: boolean;
   handleTimelineItemClick(properties: TimelineItemProps): void;
 };
 
@@ -25,6 +26,7 @@ const itemStyles: Record<string, string>[] = [
 const CalendarTimeline = ({
   schedule,
   selectedDay,
+  includePluga,
   handleTimelineItemClick,
 }: Props) => {
   const timelineContainer = useRef<HTMLElement>();
@@ -65,12 +67,16 @@ const CalendarTimeline = ({
       const groups: Record<number, vis.DataGroup> = {};
       const items = new vis.DataSet(
         schedule.map((classAssign, index) => {
-          const groupId = classAssign.assignedClass.id;
+          const groupId: number = classAssign.assignedClass.id;
 
           if (!(groupId in groups)) {
             groups[groupId] = {
               id: groupId,
-              content: `כיתה ${classAssign.assignedClass.name} בניין ${classAssign.assignedClass.building.name}`,
+              content:
+                (includePluga
+                  ? `פלוגה ${classAssign.createdBy.team.parent.name} `
+                  : "") +
+                `כיתה ${classAssign.assignedClass.name} בניין ${classAssign.assignedClass.building.name}`,
               style: `color: black;`,
             };
           }

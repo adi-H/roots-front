@@ -25,6 +25,7 @@ import { useMemo } from "react";
 import { Unit } from "../../../types/types";
 import { format, isSameDay } from "date-fns";
 import { he } from "date-fns/locale";
+import { useAuth } from "../../../Hooks/useAuth";
 
 type Props = {
   selectedDay: Date;
@@ -70,6 +71,7 @@ export const CalendarForm = (props: Props) => {
   );
   const dates: Date[] = [];
   const today = new Date();
+  const user = useAuth();
 
   // Get next 7 days of the week, not including saturday
   for (let day = 0; day < 7; ++day) {
@@ -123,6 +125,9 @@ export const CalendarForm = (props: Props) => {
                   {pluga.name}
                 </MenuItem>
               ))}
+              {user && [1, 2].includes(user.role.id) && (
+                <MenuItem value={-1}>צפה בכל הפלוגות</MenuItem>
+              )}
             </Select>
           </StyledFormControl>
         </SpacedStack>

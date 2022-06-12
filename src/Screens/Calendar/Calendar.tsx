@@ -28,22 +28,34 @@ import CalendarTimeline, {
 } from "./CalendarTimeline/CalendarTimeline";
 import { toast } from "react-toastify";
 
+type MappedAppointment = ClassAssign & {
+  originalTitle: string;
+};
+
+const mapAppointments = (appointments: ClassAssign[]): MappedAppointment[] =>
+  appointments.map((appointment) => ({
+    ...appointment,
+    originalTitle: appointment.title,
+    title: `${appointment.title}, ${appointment.assignedClass.building.name} ${appointment.assignedClass.name}`,
+  }));
+
 const filterAndMapAppointments = (
   appointments: ClassAssign[],
   plugaId: number
-) => {
-  return appointments
-    .filter((appointment) => appointment.createdBy.team.parent.id === plugaId)
-    .map((appointment) => ({
-      ...appointment,
-      title: `${appointment.title}, ${appointment.assignedClass.building.name} ${appointment.assignedClass.name}`,
-    }));
+): MappedAppointment[] => {
+  return mapAppointments(
+    plugaId > 0
+      ? appointments.filter(
+          (appointment) => appointment.createdBy.team.parent.id === plugaId
+        )
+      : appointments
+  );
 };
 
 export const Calendar = () => {
   // Schedule is the filtered array containing only chosen pluga's appointments
   const loggedUser = useAuth();
-  const [schedule, setSchedule] = useState<ClassAssign[]>([]);
+  const [schedule, setSchedule] = useState<MappedAppointment[]>([]);
   const [allAppointments, setAllAppointments] = useState<ClassAssign[]>([]);
   const [selectedPlugaId, setSelectedPlugaId] = useState<number>(0);
   const [selectedGdudId, setSelectedGdudId] = useState<number>(0);
@@ -135,7 +147,7 @@ export const Calendar = () => {
     if (item.item !== null) {
       const appointment = schedule[item.item];
       const buildingString = `${appointment.assignedClass.building.name} ${appointment.assignedClass.name}`;
-      const reason = appointment.title.replace(`, ${buildingString}`, "");
+      const reason = appointment.originalTitle;
 
       setDialogData({
         dateString: format(appointment.startDate, "d בMMM, y", {
@@ -172,6 +184,7 @@ export const Calendar = () => {
       <CalendarTimeline
         schedule={schedule}
         selectedDay={selectedDay}
+        includePluga={selectedPlugaId < 0}
         handleTimelineItemClick={handleTimelineItemClick}
       />
       <CalendarItemInfo
