@@ -1,4 +1,3 @@
-import Swal from "sweetalert2";
 import { Items } from "../types/types";
 import { axiosInstance } from "./AxiosInstance";
 
@@ -7,60 +6,11 @@ export class ItemsService {
     return (await axiosInstance.get<Items[]>(`/items/owner/${ownerId}`)).data;
   }
 
-  public static async usingItemes(
-    itemId: number,
-    usedBy: any,
-    quantity: number,
-    description: string
-  ) {
-    try {
-      // TODO: validations
-      await axiosInstance.post(`/items/use`, {
-        itemId,
-        usedBy,
-        quantity,
-        description,
-      });
-    } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
-    }
-  }
-
-  public static async deleteUsage(itemId: number) {
-    try {
-      // TODO: validations
-      await axiosInstance.delete(`/items/usage/${itemId}`, {});
-    } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
-    }
-  }
-
   public static async deleteItem(itemId: number) {
-    try {
-      // TODO: validations
-      await axiosInstance.delete(`/items/${itemId}`, {});
-    } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
-    }
+    await axiosInstance.delete(`/items/${itemId}`, {});
   }
 
-  public static async createItem(
-    ownerId: number,
-    quantity: number,
-    name: string
-  ) {
-    try {
-      // TODO: validations, potential bug: when adding an item with the same name, it is returned and added to array,
-      // a migration between the two identical items should be made
-      return (
-        await axiosInstance.put<Items>(`/items/create`, {
-          owner: ownerId,
-          quantity,
-          name,
-        })
-      ).data;
-    } catch (error) {
-      Swal.fire({ title: "קרתה שגיאה בשליחת הבקשה", icon: "error" });
-    }
+  public static async createItem(ownerId: number, item: any) {
+    await axiosInstance.post<Items>(`/items/create`, { owner: ownerId, item })
   }
 }

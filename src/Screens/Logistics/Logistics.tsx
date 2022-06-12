@@ -1,52 +1,39 @@
-import { Box, Button, Paper, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import { PageTitle } from "../../Common/PageTitle/PageTitle";
-import { useAuth } from "../../Hooks/useAuth";
-import { ItemsService } from "../../Services/ItemsService";
-import { Items } from "../../types/types";
-import styles from "../Home/Home.module.css";
-import { ItemsList } from "./Items/ItemsList";
+import { useState } from 'react';
+import { Paper, Button, Grid } from '@mui/material';
+import {Add } from '@mui/icons-material/';
+import { PageTitle } from '../../Common/PageTitle/PageTitle';
+import { useAuth } from '../../Hooks/useAuth';
+import styles from '../Home/Home.module.css';
+import { AddItemDialog } from './addItemDialog';
+import LogisticTable from './LogisticTable';
 
-type Props = {};
 
-export const Logistics = (props: Props) => {
-  const [itemsList, setItemsList] = useState<Items[]>([]);
+export const Logistics = () => {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
+
   const user = useAuth();
 
-  useEffect(() => {
-    getItemsList(user.team.parent.id);
-  }, []);
-
-  async function getItemsList(ownerId: number) {
-    const itemsList = await ItemsService.getItemsList(ownerId);
-    setItemsList(itemsList);
-  }
-
-  const handleDeleteItem = (itemId: number) => {
-    setItemsList((currItemsList) => {
-      return currItemsList.filter((item) => item.id !== itemId);
-    });
-  };
-
-  const handleReturnItem = (itemId: number) => {
-    setItemsList((currItemsList) => {
-      return currItemsList.map((item) =>
-        item.id !== itemId ? item : { ...item, usedBy: { ...item.owner } }
-      );
-    });
-  };
-
   return (
-    <Paper className={styles.homeContainer} style={{ overflow: "hidden" }}>
-      <PageTitle title="לוגיסטיקה" />
-      <ItemsList
-        addItem={(items: Items) => {
-          setItemsList((currItemsList) => [...currItemsList, items]);
-        }}
-        itemsList={itemsList}
-        deleteItem={handleDeleteItem}
-        returnItem={handleReturnItem}
-      />
+    <Paper className={styles.homeContainer}>
+      <PageTitle title='לוגיסטיקה' />
+      <Grid container>
+        <Button
+          endIcon={<Add />}
+          onClick={() => setIsAddDialogOpen(true)}
+          variant='contained'
+          color='primary'
+          size='large'
+          style={{ marginRight: '16px', marginBottom: '16px' }}>
+          יצירה
+        </Button>
+        <LogisticTable />
+        {isAddDialogOpen &&
+          <AddItemDialog
+            isOpen={isAddDialogOpen}
+            handleClose={() => setIsAddDialogOpen(false)}
+            ownerId={user.team.parent.id}
+          />}
+      </Grid>
     </Paper>
   );
 };
