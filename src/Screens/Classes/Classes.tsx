@@ -26,13 +26,13 @@ export default function Classes(props: Props) {
     const classCards = props.foundClasses
       .filter(
         (foundClass: Class) =>
-          toShowAll || foundClass.owner.id == currentUser.team.parent.id
+          toShowAll || foundClass.owner.id === currentUser.team.parent.id
       )
       .map((foundClass: Class) => (
         <Grid item xs={6} key={foundClass.id}>
           <ClassCard
             classInfo={foundClass}
-            isPluga={foundClass.owner.id == currentUser.team.parent.id}
+            isPluga={foundClass.owner.id === currentUser.team.parent.id}
             handleAssignClass={(eventName: string) =>
               props.handleAssignClass(foundClass.id, eventName)
             }

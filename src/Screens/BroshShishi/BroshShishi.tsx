@@ -22,8 +22,9 @@ export const BroshShishi = (props: Props) => {
 
   return (
     <Paper className={styles.container}>
-      <PageTitle title="ברושישי" />
+      <PageTitle title="ברושישי" disableBackButton />
       <iframe
+        title="ברושישי"
         style={{
           display: "block",
           height: "80%",
