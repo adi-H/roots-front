@@ -1,7 +1,8 @@
 const itemFields = {
     NAME: 'name',
-    NORMAL_QUANTITY: 'normalQuantity',
-    UNORMAL_QUANTITY:'unormalQuantity',
+    READY_TO_USE_QUANTITY: 'readyToUseQuantity',
+    IN_USE_QUANTITY: 'inUseQunatity',
+    UNUSABLE_QUANTITY:'unUseableQuantity',
     DESCRIPTION: 'description'
 }
 

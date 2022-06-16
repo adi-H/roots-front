@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Swal from 'sweetalert2';
 import { ItemsService } from '../../../Services/ItemsService';
 import itemFields from './itemFields'
+import { Item } from '../../../types/types';
 
 type propsType = {
     isOpen: boolean,
@@ -12,18 +13,18 @@ type propsType = {
     handleClose: () => void
 }
 
-const { NAME, NORMAL_QUANTITY, UNORMAL_QUANTITY, DESCRIPTION } = itemFields;
+const { NAME, READY_TO_USE_QUANTITY, UNUSABLE_QUANTITY, DESCRIPTION } = itemFields;
 
 const NAME_LABEL = 'שם פריט';
-const NORMAL_QUANTITY_LABEL = 'כמות(סה"כ)';
+const NORMAL_QUANTITY_LABEL = 'כמות זמינה';
 const UNORMAL_QUANTITY_LABEL = 'כמות בלאי';
 const DESCRIPTION_LABEL = 'תיאור';
 
 const schema = yup.object({
     [NAME]: yup.string().required('שם פריט חובה'),
-    [NORMAL_QUANTITY]: yup.number().positive('כמות חייבת להיות גדולה מ0')
+    [READY_TO_USE_QUANTITY]: yup.number().positive('כמות חייבת להיות גדולה מ0')
         .integer().typeError('מספר חייב להיות בעל ערך').required('כמות חובה'),
-    [UNORMAL_QUANTITY]: yup.number().min(0, 'כמות חייבת להיות גדולה או שווה ל0').integer()
+    [UNUSABLE_QUANTITY]: yup.number().min(0, 'כמות חייבת להיות גדולה או שווה ל0').integer()
         .typeError('מספר חייב להיות בעל ערך').required('כמות בלאי חובה. במידה ואין השאירו 0'),
     [DESCRIPTION]: yup.string()
 });
@@ -36,9 +37,9 @@ const AddItemDialog = ({ isOpen, ownerId, handleClose }: propsType) => {
 
     const { errors, isValid } = formState
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (itemToCreate: any) => {
         try {
-            await ItemsService.createItem(ownerId, data)
+            await ItemsService.createItem(itemToCreate)
             handleClose()
             Swal.fire({ title: 'פריט נוצר בהצלחה', icon: 'success', timer: 3000 });
         } catch (error) {
@@ -79,7 +80,7 @@ return (
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <Controller
-                            name={NORMAL_QUANTITY}
+                            name={READY_TO_USE_QUANTITY}
                             control={control}
                             defaultValue={0}
                             render={({ field }) => (
@@ -87,8 +88,8 @@ return (
                                     name={field.name}
                                     value={field.value}
                                     onChange={field.onChange}
-                                    error={Boolean(errors[NORMAL_QUANTITY])}
-                                    label={errors[NORMAL_QUANTITY]?.message || NORMAL_QUANTITY_LABEL}
+                                    error={Boolean(errors[READY_TO_USE_QUANTITY])}
+                                    label={errors[READY_TO_USE_QUANTITY]?.message || NORMAL_QUANTITY_LABEL}
                                     fullWidth
                                     type='number'
                                     margin='normal'
@@ -99,7 +100,7 @@ return (
                     </Grid>
                     <Grid item xs={6}>
                         <Controller
-                            name={UNORMAL_QUANTITY}
+                            name={UNUSABLE_QUANTITY}
                             control={control}
                             defaultValue={0}
                             render={({ field }) => (
@@ -107,8 +108,8 @@ return (
                                     name={field.name}
                                     value={field.value}
                                     onChange={field.onChange}
-                                    error={Boolean(errors[UNORMAL_QUANTITY])}
-                                    label={errors[UNORMAL_QUANTITY]?.message || UNORMAL_QUANTITY_LABEL}
+                                    error={Boolean(errors[UNUSABLE_QUANTITY])}
+                                    label={errors[UNUSABLE_QUANTITY]?.message || UNORMAL_QUANTITY_LABEL}
                                     fullWidth
                                     type='number'
                                     margin='normal'
