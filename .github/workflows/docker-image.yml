@@ -29,7 +29,7 @@ jobs:
 
       - name: Build and save
         uses: docker/build-push-action@v3
-        push: true
         with:
+          push: true
           tags: dorsivan/roots-front:dev.0.2
           outputs: type=docker,dest=/tmp/img.tar
