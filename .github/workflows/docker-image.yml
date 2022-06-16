@@ -29,6 +29,7 @@ jobs:
 
       - name: Build and save
         uses: docker/build-push-action@v3
+        push: true
         with:
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/roots-front:${{ env.RELEASE_VERSION }}
+          tags: dorsivan/roots-front:dev.0.2
           outputs: type=docker,dest=/tmp/img.tar
