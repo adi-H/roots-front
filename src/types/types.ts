@@ -11,6 +11,12 @@ export interface Role {
   name: string;
 }
 
+export interface Quiz {
+  id: number;
+  name: string;
+  url: string;
+}
+
 export interface User {
   id: number;
   firstName: Building;

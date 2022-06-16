@@ -23,11 +23,13 @@ import {
   Restore,
   School,
   Warehouse,
+  Quiz,
 } from "@mui/icons-material";
 import NavigationToolbar from "./Common/NavigationToolbar/NavigationToolbar";
 import { Box, Stack } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import QuizScreen from "./Screens/QuizScreen/QuizScreen";
 
 export type NavigationRoute = {
   path: string;
@@ -124,6 +126,14 @@ function App() {
     {
       path: "/login",
       element: <Login storeUserContext={storeUserContext} />,
+    },
+    {
+      path: "/quizScreen",
+      element: (
+        <RequireAuth>
+          <QuizScreen />
+        </RequireAuth>
+      ),
     },
     {
       path: "/calendar",
