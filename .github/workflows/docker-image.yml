@@ -32,4 +32,3 @@ jobs:
         with:
           push: true
           tags: dorsivan/roots-front:dev.0.2
-          outputs: type=docker,dest=/tmp/img.tar
