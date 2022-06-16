@@ -5,7 +5,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Swal from 'sweetalert2';
 import { ItemsService } from '../../../Services/ItemsService';
 import itemFields from './itemFields'
-import { Item } from '../../../types/types';
 
 type propsType = {
     isOpen: boolean,
@@ -39,28 +38,88 @@ const AddItemDialog = ({ isOpen, ownerId, handleClose }: propsType) => {
 
     const onSubmit = async (itemToCreate: any) => {
         try {
-            await ItemsService.createItem(itemToCreate)
+            await ItemsService.createItem({ ...itemToCreate, ownerId })
             handleClose()
             Swal.fire({ title: 'פריט נוצר בהצלחה', icon: 'success', timer: 3000 });
         } catch (error) {
             Swal.fire({
                 title: 'קרתה שגיאה בשליחת הבקשה', icon: 'error', timer: 3000
             });
+        }
     }
-}
 
-return (
-    <Dialog
-        open={isOpen}
-        onClose={handleClose}
-        fullWidth
-    >
-        <DialogTitle>יצירת פריט</DialogTitle>
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogContent>
-                <Grid container>
+    return (
+        <Dialog
+            open={isOpen}
+            onClose={handleClose}
+            fullWidth
+        >
+            <DialogTitle>יצירת פריט</DialogTitle>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <DialogContent>
+                    <Grid container>
+                        <Controller
+                            name={NAME}
+                            control={control}
+                            defaultValue=''
+                            render={({ field }) => (
+                                <TextField
+                                    name={field.name}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    error={Boolean(errors[NAME])}
+                                    label={errors[NAME]?.message || NAME_LABEL}
+                                    fullWidth
+                                    margin='normal'
+                                    variant='filled'
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Controller
+                                name={READY_TO_USE_QUANTITY}
+                                control={control}
+                                defaultValue={0}
+                                render={({ field }) => (
+                                    <TextField
+                                        name={field.name}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        error={Boolean(errors[READY_TO_USE_QUANTITY])}
+                                        label={errors[READY_TO_USE_QUANTITY]?.message || NORMAL_QUANTITY_LABEL}
+                                        fullWidth
+                                        type='number'
+                                        margin='normal'
+                                        variant='filled'
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Controller
+                                name={UNUSABLE_QUANTITY}
+                                control={control}
+                                defaultValue={0}
+                                render={({ field }) => (
+                                    <TextField
+                                        name={field.name}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        error={Boolean(errors[UNUSABLE_QUANTITY])}
+                                        label={errors[UNUSABLE_QUANTITY]?.message || UNORMAL_QUANTITY_LABEL}
+                                        fullWidth
+                                        type='number'
+                                        margin='normal'
+                                        variant='filled'
+                                    />
+                                )}
+                            />
+                        </Grid>
+                    </Grid>
                     <Controller
-                        name={NAME}
+                        name={DESCRIPTION}
                         control={control}
                         defaultValue=''
                         render={({ field }) => (
@@ -68,88 +127,28 @@ return (
                                 name={field.name}
                                 value={field.value}
                                 onChange={field.onChange}
-                                error={Boolean(errors[NAME])}
-                                label={errors[NAME]?.message || NAME_LABEL}
+                                error={Boolean(errors[DESCRIPTION])}
+                                label={errors[DESCRIPTION]?.message || DESCRIPTION_LABEL}
+                                multiline
+                                rows={5}
                                 fullWidth
                                 margin='normal'
                                 variant='filled'
                             />
                         )}
                     />
-                </Grid>
-                <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <Controller
-                            name={READY_TO_USE_QUANTITY}
-                            control={control}
-                            defaultValue={0}
-                            render={({ field }) => (
-                                <TextField
-                                    name={field.name}
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    error={Boolean(errors[READY_TO_USE_QUANTITY])}
-                                    label={errors[READY_TO_USE_QUANTITY]?.message || NORMAL_QUANTITY_LABEL}
-                                    fullWidth
-                                    type='number'
-                                    margin='normal'
-                                    variant='filled'
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Controller
-                            name={UNUSABLE_QUANTITY}
-                            control={control}
-                            defaultValue={0}
-                            render={({ field }) => (
-                                <TextField
-                                    name={field.name}
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    error={Boolean(errors[UNUSABLE_QUANTITY])}
-                                    label={errors[UNUSABLE_QUANTITY]?.message || UNORMAL_QUANTITY_LABEL}
-                                    fullWidth
-                                    type='number'
-                                    margin='normal'
-                                    variant='filled'
-                                />
-                            )}
-                        />
-                    </Grid>
-                </Grid>
-                <Controller
-                    name={DESCRIPTION}
-                    control={control}
-                    defaultValue=''
-                    render={({ field }) => (
-                        <TextField
-                            name={field.name}
-                            value={field.value}
-                            onChange={field.onChange}
-                            error={Boolean(errors[DESCRIPTION])}
-                            label={errors[DESCRIPTION]?.message || DESCRIPTION_LABEL}
-                            multiline
-                            rows={5}
-                            fullWidth
-                            margin='normal'
-                            variant='filled'
-                        />
-                    )}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} variant='contained'>
-                    בטל
-                </Button>
-                <Button disabled={!isValid} type='submit' variant='contained'>
-                    אשר
-                </Button>
-            </DialogActions>
-        </form>
-    </Dialog >
-)
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} variant='contained'>
+                        בטל
+                    </Button>
+                    <Button disabled={!isValid} type='submit' variant='contained'>
+                        אשר
+                    </Button>
+                </DialogActions>
+            </form>
+        </Dialog >
+    )
 };
 
 export default AddItemDialog;
