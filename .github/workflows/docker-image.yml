@@ -30,12 +30,5 @@ jobs:
       - name: Build and save
         uses: docker/build-push-action@v3
         with:
-          tags: dorsivan/roots-front:${{ env.RELEASE_VERSION }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/roots-front:${{ env.RELEASE_VERSION }}
           outputs: type=docker,dest=/tmp/img.tar
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: Release ${{ env.RELEASE_VERSION }}
-          files: |
-            /tmp/img.tar
