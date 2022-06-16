@@ -14,6 +14,9 @@ import { useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { CenteredFlexBox } from "../../Common/CenteredFlexBox/CenteredFlexBox";
 import { useAuth } from "../../Hooks/useAuth";
+import { Utilities } from "../../Services/Utilities";
+import { Security } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const MAX_WIDTH = "800px";
 
@@ -41,7 +44,9 @@ const HomeWelcomeText = styled(Typography)(({ theme }) => ({
 export const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const bigHeader = useMediaQuery(`(min-width:${MAX_WIDTH})`);
+  const navigate = useNavigate();
   const user = useAuth();
+  const canEditRoles = Utilities.canEditRoles(user);
 
   return (
     <>
@@ -91,6 +96,20 @@ export const Home = () => {
           >
             מודל
           </HomeButton>
+          {canEditRoles && (
+            <HomeButton
+              variant="contained"
+              style={{
+                backgroundColor: "#797979",
+                color: "#FFFFFF",
+              }}
+              disableRipple
+              onClick={() => navigate("/editRole")}
+              startIcon={<Security />}
+            >
+              מסך הרשאות
+            </HomeButton>
+          )}
           <HomeButton
             variant="contained"
             style={{

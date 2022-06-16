@@ -30,6 +30,8 @@ import { Box, Stack } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizScreen from "./Screens/QuizScreen/QuizScreen";
+import EditRole from "./Screens/EditRole/EditRole";
+import { Utilities } from "./Services/Utilities";
 
 export type NavigationRoute = {
   path: string;
@@ -56,6 +58,7 @@ function App() {
     return getUserContext();
   });
   const location = useLocation();
+  const canEditRoles = Utilities.canEditRoles(loggedUser);
 
   useEffect(() => {
     storeUserContext();
@@ -160,6 +163,16 @@ function App() {
       ),
     },
   ];
+
+  canEditRoles &&
+    navigationRoutes.push({
+      path: "/editRole",
+      element: (
+        <RequireAuth>
+          <EditRole />
+        </RequireAuth>
+      ),
+    });
 
   return (
     <UserContext.Provider value={loggedUser}>
