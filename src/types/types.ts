@@ -50,15 +50,16 @@ export interface Url {
   url: string;
 }
 
-export interface Items {
+export interface Item {
   id: number;
   name: string;
-  quantity: number;
+  readyToUseQuantity: number;
+  unUseableQuantity: number;
   description: string;
-  startedUseAt: Date;
   owner: Unit;
   usedBy: Unit;
 }
+
 export interface Attendance {
   user: User;
   reason: string;

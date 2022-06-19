@@ -1,18 +1,18 @@
-
+import { Item } from "../types/types";
 import { toast } from "react-toastify";
 import { Items } from "../types/types";
 import { axiosInstance } from "./AxiosInstance";
 
 export class ItemsService {
   public static async getItemsList(ownerId: number) {
-    return (await axiosInstance.get<Items[]>(`/items/owner/${ownerId}`)).data;
-  }
-  
-  public static async deleteItem(itemId: number) {
-    await axiosInstance.delete(`/items/${itemId}`, {});
+    return (await axiosInstance.get<Item[]>(`/items/owner/${ownerId}`)).data;
   }
 
-  public static async createItem(ownerId: number, item: any) {
-    await axiosInstance.post<Items>(`/items/create`, { owner: ownerId, item })
+  public static async deleteItem(itemIdToDelete: number) {
+    await axiosInstance.delete(`/items/${itemIdToDelete}`);
+  }
+
+  public static async createItem(itemToCreate: Item) {
+    await axiosInstance.post<Item>(`/items`, itemToCreate)
   }
 }
