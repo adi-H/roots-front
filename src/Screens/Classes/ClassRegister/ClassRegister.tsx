@@ -29,12 +29,12 @@ export default function Classes() {
     const endDate = new Date(chosenDate.valueOf());
 
     startDate.setHours(startTime.getHours());
-    startDate.setMinutes(startTime.getHours());
-    startDate.setSeconds(startTime.getHours());
+    startDate.setMinutes(startTime.getMinutes());
+    startDate.setSeconds(startTime.getSeconds());
 
     endDate.setHours(endTime.getHours());
-    endDate.setMinutes(endTime.getHours());
-    endDate.setSeconds(endTime.getHours());
+    endDate.setMinutes(endTime.getMinutes());
+    endDate.setSeconds(endTime.getSeconds());
 
     ClassAssignService.addClassAssign({
       title: eventName,
@@ -48,7 +48,7 @@ export default function Classes() {
     <>
       <PageTitle title="שריון כיתות" />
       <Box sx={{ padding: "1rem 0", margin: "3%" }}>
-        {foundClasses.length == 0 ? (
+        {foundClasses.length === 0 ? (
           <ResponsiveDatePickers
             endTime={endTime}
             startTime={startTime}

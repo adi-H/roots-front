@@ -3,11 +3,12 @@ import {
   Appointments,
   DayView,
   Scheduler,
+  CurrentTimeIndicator,
+  AppointmentTooltip,
 } from "@devexpress/dx-react-scheduler-material-ui";
-import { Divider, Paper } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Button, Divider, Paper, styled } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { useAuth } from "../../Hooks/useAuth";
 import { ClassAssignService } from "../../Services/ClassAssignService";
@@ -15,31 +16,54 @@ import { UnitService } from "../../Services/UnitService";
 import { ClassAssign, Unit } from "../../types/types";
 import { CalendarForm } from "./CalendarForm/CalendarForm";
 import { ClassRequests } from "./ClassRequests/ClassRequests";
+import vis from "vis";
+import { format, isSameDay } from "date-fns";
+import ClassNotFound from "./ClassNotFound/ClassNotFound";
+import { he } from "date-fns/locale";
+import CalendarItemInfo, {
+  ClassItemInfo,
+} from "./CalendarItemInfo/CalendarItemInfo";
+import CalendarTimeline, {
+  TimelineItemProps,
+} from "./CalendarTimeline/CalendarTimeline";
+import { toast } from "react-toastify";
 
-type Props = {};
+type MappedAppointment = ClassAssign & {
+  originalTitle: string;
+};
+
+const mapAppointments = (appointments: ClassAssign[]): MappedAppointment[] =>
+  appointments.map((appointment) => ({
+    ...appointment,
+    originalTitle: appointment.title,
+    title: `${appointment.title}, ${appointment.assignedClass.building.name} ${appointment.assignedClass.name}`,
+  }));
 
 const filterAndMapAppointments = (
   appointments: ClassAssign[],
   plugaId: number
-) => {
-  return appointments
-    .filter((appointment) => appointment.createdBy.team.parent.id === plugaId)
-    .map((appointment) => ({
-      ...appointment,
-      title: `${appointment.title}, ${appointment.assignedClass.building.name} ${appointment.assignedClass.name}`,
-    }));
+): MappedAppointment[] => {
+  return mapAppointments(
+    plugaId > 0
+      ? appointments.filter(
+          (appointment) => appointment.createdBy.team.parent.id === plugaId
+        )
+      : appointments
+  );
 };
 
-export const Calendar = (props: Props) => {
+export const Calendar = () => {
   // Schedule is the filtered array containing only chosen pluga's appointments
   const loggedUser = useAuth();
-  const [schedule, setSchedule] = useState<ClassAssign[]>([]);
+  const [schedule, setSchedule] = useState<MappedAppointment[]>([]);
   const [allAppointments, setAllAppointments] = useState<ClassAssign[]>([]);
   const [selectedPlugaId, setSelectedPlugaId] = useState<number>(0);
   const [selectedGdudId, setSelectedGdudId] = useState<number>(0);
   const [allUnits, setAllUnits] = useState<Unit[]>([]);
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [classRequests, setClassRequests] = useState<ClassAssign[]>([]);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [dialogData, setDialogData] = useState<ClassItemInfo | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,14 +97,19 @@ export const Calendar = (props: Props) => {
       selectedDay
     );
     setAllAppointments(appointmentsData);
+    const schedule = filterAndMapAppointments(
+      appointmentsData,
+      selectedPlugaId!
+    );
 
-    setSchedule(filterAndMapAppointments(appointmentsData, selectedPlugaId!));
+    if (schedule.length <= 0) {
+      // Display Error
+    }
+    setSchedule(schedule);
   };
 
-  const handleSelectedDayChange = (newDate: string | null) => {
-    if (newDate) {
-      setSelectedDay(new Date(newDate));
-    }
+  const handleSelectedDayChange = (newDate: Date) => {
+    setSelectedDay(newDate);
   };
 
   const handleRequestAccept = async (classAssignId: number) => {
@@ -93,7 +122,7 @@ export const Calendar = (props: Props) => {
       );
       await fetchSchedule();
     } catch (e) {
-      Swal.fire({ title: "קרתה שגיאה באישור הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה באישור הבקשה");
     }
   };
 
@@ -106,18 +135,43 @@ export const Calendar = (props: Props) => {
         )
       );
     } catch (e) {
-      Swal.fire({ title: "קרתה שגיאה בדחיית הבקשה", icon: "error" });
+      toast.error("אירעה שגיאה בדחיית הבקשה");
+    }
+  };
+
+  const handleItemInfoDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleTimelineItemClick = (item: TimelineItemProps) => {
+    if (item.item !== null) {
+      const appointment = schedule[item.item];
+      const buildingString = `${appointment.assignedClass.building.name} ${appointment.assignedClass.name}`;
+      const reason = appointment.originalTitle;
+
+      setDialogData({
+        dateString: format(appointment.startDate, "d בMMM, y", {
+          locale: he,
+        }),
+        building: appointment.assignedClass.building.name,
+        classNumber: appointment.assignedClass.name,
+        startTime: format(appointment.startDate, "HH:mm", {
+          locale: he,
+        }),
+        endTime: format(appointment.endDate, "HH:mm", {
+          locale: he,
+        }),
+        reason,
+        createdByName: `${appointment.createdBy.firstName} ${appointment.createdBy.lastName}`,
+        createdByPhone: appointment.createdBy.phoneNumber,
+      });
+      setDialogOpen(true);
     }
   };
 
   return (
     <>
-      <PageTitle title={'לו"ז כיתות'}></PageTitle>
-      <ClassRequests
-        classRequests={classRequests}
-        onRequestAccept={handleRequestAccept}
-        onRequestReject={handleRequestReject}
-      />
+      <PageTitle title={'לו"ז כיתות'} />
       <CalendarForm
         selectedDay={selectedDay}
         selectedGdudId={selectedGdudId}
@@ -127,14 +181,17 @@ export const Calendar = (props: Props) => {
         onSelectedGdudChange={(gdudId: number) => setSelectedGdudId(gdudId)}
         onSelectedPlugaChange={(plugaId: number) => setSelectedPlugaId(plugaId)}
       />
-      <Divider />
-      <Paper>
-        <Scheduler data={schedule}>
-          <ViewState currentDate={selectedDay} />
-          <DayView startDayHour={7} endDayHour={23} />
-          <Appointments />
-        </Scheduler>
-      </Paper>
+      <CalendarTimeline
+        schedule={schedule}
+        selectedDay={selectedDay}
+        includePluga={selectedPlugaId < 0}
+        handleTimelineItemClick={handleTimelineItemClick}
+      />
+      <CalendarItemInfo
+        open={dialogOpen}
+        {...dialogData}
+        handleClose={handleItemInfoDialogClose}
+      />
     </>
   );
 };

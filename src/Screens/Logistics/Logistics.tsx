@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Paper, Button, Grid } from '@mui/material';
 import {Add } from '@mui/icons-material/';
@@ -14,8 +15,8 @@ export const Logistics = () => {
   const user = useAuth();
 
   return (
-    <Paper className={styles.homeContainer}>
-      <PageTitle title='לוגיסטיקה' />
+    <Paper style={{ overflow: "hidden" }}>
+      <PageTitle title="לוגיסטיקה" disableBackButton />
       <Grid container>
         <Button
           endIcon={<Add />}
