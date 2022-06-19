@@ -1,5 +1,4 @@
 import { Item } from "../types/types";
-import { toast } from "react-toastify";
 import { Items } from "../types/types";
 import { axiosInstance } from "./AxiosInstance";
 
@@ -13,6 +12,6 @@ export class ItemsService {
   }
 
   public static async createItem(itemToCreate: Item) {
-    await axiosInstance.post<Item>(`/items`, itemToCreate)
+    await axiosInstance.post<Item>(`/items`, itemToCreate);
   }
 }

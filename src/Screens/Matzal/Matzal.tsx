@@ -33,7 +33,7 @@ const MaskedBox = styled(Box)(({ theme }) => ({
   width: "85%",
   minWidth: "200px",
   maxWidth: "600px",
-  aspectRatio: "100 / 53",
+  aspectRatio: "100 / 52.95",
   backgroundColor: "#00D1AC",
   backgroundImage: `url(${HOME_BACKGROUND})`,
   maskImage: `url(${MATZAL_HEADER_SHAPE})`,
@@ -81,7 +81,6 @@ const MatzalHeaderInfoLabel = styled((props: TypographyProps) => (
   },
 }));
 
-// TODO: this component needs to be separated as soon as possible - lack of time :(
 export const Matzal = () => {
   const [companyWithCadets, setCompanyWithCadets] = useState<Unit>(null!);
   const [isModalOpen, setIsModalOpen] = useState(false);
