@@ -98,7 +98,7 @@ export const Matzal = () => {
     });
 
     fetchCadets();
-  }, []);
+  }, [companyWithCadets]);
 
   const numberOfCadetsDetails = useMemo(() => {
     let amountOfCadets = 0;
