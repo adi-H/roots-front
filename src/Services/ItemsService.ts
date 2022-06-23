@@ -1,5 +1,4 @@
 import { Item } from "../types/types";
-import { Items } from "../types/types";
 import { axiosInstance } from "./AxiosInstance";
 
 export class ItemsService {
