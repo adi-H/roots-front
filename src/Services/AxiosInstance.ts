@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "../config/config";
+import { AuthorityError } from "../enums/AuthorityError";
 
 const axiosInstance = axios.create({
   baseURL: `${config.serverUrl}/api`,
@@ -13,7 +14,10 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error: any) => {
-    if (error.response.status === 401) {
+    if (
+      error?.response?.status === 401 &&
+      error?.response?.data === AuthorityError.AUTHENTICATION.toString()
+    ) {
       window.location.href = "/login";
     }
   }

@@ -11,7 +11,7 @@ import {
   styled,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { Utilities } from "../../../Services/Utilities";
+import { Utilities } from "../../../utils/Utilities";
 import { Attendance, Unit, User } from "../../../types/types";
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({

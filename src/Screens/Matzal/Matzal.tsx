@@ -13,7 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { SocketIOService } from "../../Services/SocketIOService";
 import { UnitService } from "../../Services/UnitService";
-import { Utilities } from "../../Services/Utilities";
+import { Utilities } from "../../utils/Utilities";
 import { Attendance, Unit } from "../../types/types";
 import { AddCadetModal } from "./AddCadetModal/AddCadetModal";
 import {

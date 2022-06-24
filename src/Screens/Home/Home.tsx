@@ -14,9 +14,10 @@ import { useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { CenteredFlexBox } from "../../Common/CenteredFlexBox/CenteredFlexBox";
 import { useAuth } from "../../Hooks/useAuth";
-import { Utilities } from "../../Services/Utilities";
+import { Utilities } from "../../utils/Utilities";
 import { Security } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import AuthorityUtils from "../../utils/AuthorityUtils";
 
 const MAX_WIDTH = "800px";
 
@@ -46,7 +47,7 @@ export const Home = () => {
   const bigHeader = useMediaQuery(`(min-width:${MAX_WIDTH})`);
   const navigate = useNavigate();
   const user = useAuth();
-  const canEditRoles = Utilities.canEditRoles(user);
+  const canEditRoles = AuthorityUtils.canEditRoles(user.role.id);
 
   return (
     <>

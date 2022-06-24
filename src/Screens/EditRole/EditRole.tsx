@@ -14,7 +14,7 @@ import { RoleService } from "../../Services/RoleService";
 import { SocketIOService } from "../../Services/SocketIOService";
 import { UnitService } from "../../Services/UnitService";
 import { UserService } from "../../Services/UserService";
-import { Utilities } from "../../Services/Utilities";
+import { Utilities } from "../../utils/Utilities";
 import { Role, Unit, User } from "../../types/types";
 
 const EditRole = () => {

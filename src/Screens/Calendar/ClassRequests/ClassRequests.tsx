@@ -10,7 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Utilities } from "../../../Services/Utilities";
+import { Utilities } from "../../../utils/Utilities";
 import { ClassAssign } from "../../../types/types";
 
 type Props = {

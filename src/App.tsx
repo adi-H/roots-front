@@ -31,7 +31,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizScreen from "./Screens/QuizScreen/QuizScreen";
 import EditRole from "./Screens/EditRole/EditRole";
-import { Utilities } from "./Services/Utilities";
+import AuthorityUtils from "./utils/AuthorityUtils";
 
 export type NavigationRoute = {
   path: string;
@@ -58,7 +58,7 @@ function App() {
     return getUserContext();
   });
   const location = useLocation();
-  const canEditRoles = Utilities.canEditRoles(loggedUser);
+  const canEditRoles = AuthorityUtils.canEditRoles(loggedUser.role.id);
 
   useEffect(() => {
     storeUserContext();

@@ -32,12 +32,12 @@ export const BroshShishi = (props: Props) => {
           borderRadius: "20px",
           marginRight: "auto",
           marginLeft: "auto",
+          backgroundColor: 'transparent'
         }}
         src={broshUrl?.url}
         scrolling="scrolling"
         frameBorder="0"
         seamless
-        allowTransparency
         allowFullScreen
       />
     </Paper>
