@@ -18,6 +18,7 @@ import { Utilities } from "../../utils/Utilities";
 import { Security } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import AuthorityUtils from "../../utils/AuthorityUtils";
+import CustomThemeProvider from "../../theme";
 
 const MAX_WIDTH = "800px";
 
@@ -47,10 +48,10 @@ export const Home = () => {
   const bigHeader = useMediaQuery(`(min-width:${MAX_WIDTH})`);
   const navigate = useNavigate();
   const user = useAuth();
-  const canEditRoles = AuthorityUtils.canEditRoles(user.role.id);
+  const canEditRoles = AuthorityUtils.canEditRoles(user?.role?.id);
 
   return (
-    <>
+    <CustomThemeProvider>
       <PageTitle title="בית" disableBackButton />
       <Stack>
         <CenteredFlexBox alignItems="center">
@@ -129,6 +130,6 @@ export const Home = () => {
           onClose={() => setIsModalOpen(false)}
         />
       </Stack>
-    </>
+    </CustomThemeProvider>
   );
 };

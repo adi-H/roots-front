@@ -61,14 +61,12 @@ export const Calendar = () => {
   const [selectedGdudId, setSelectedGdudId] = useState<number>(0);
   const [allUnits, setAllUnits] = useState<Unit[]>([]);
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
-  const [classRequests, setClassRequests] = useState<ClassAssign[]>([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [dialogData, setDialogData] = useState<ClassItemInfo | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
-      const requests = await ClassAssignService.getRequests();
       const units = await UnitService.getAll();
       await fetchSchedule();
 
@@ -78,7 +76,6 @@ export const Calendar = () => {
       setSelectedPlugaId(
         loggedUser?.team.parent.id ? loggedUser.team.parent.id : 0
       );
-      setClassRequests(requests);
       setAllUnits(units);
     }
     fetchData();
@@ -103,40 +100,13 @@ export const Calendar = () => {
     );
 
     if (schedule.length <= 0) {
-      // Display Error
+      // TODO: Display Error
     }
     setSchedule(schedule);
   };
 
   const handleSelectedDayChange = (newDate: Date) => {
     setSelectedDay(newDate);
-  };
-
-  const handleRequestAccept = async (classAssignId: number) => {
-    try {
-      await ClassAssignService.acceptRequest(classAssignId);
-      setClassRequests((oldClassRequests) =>
-        oldClassRequests.filter(
-          (classRequest) => classRequest.id !== classAssignId
-        )
-      );
-      await fetchSchedule();
-    } catch (e) {
-      toast.error("אירעה שגיאה באישור הבקשה");
-    }
-  };
-
-  const handleRequestReject = async (classAssignId: number) => {
-    try {
-      await ClassAssignService.rejectRequest(classAssignId);
-      setClassRequests((oldClassRequests) =>
-        oldClassRequests.filter(
-          (classRequest) => classRequest.id !== classAssignId
-        )
-      );
-    } catch (e) {
-      toast.error("אירעה שגיאה בדחיית הבקשה");
-    }
   };
 
   const handleItemInfoDialogClose = () => {

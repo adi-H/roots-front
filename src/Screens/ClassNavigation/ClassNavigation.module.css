@@ -5,22 +5,3 @@
   background-image: url(../../Images/homeBackground.png);
   background-size: auto;
 }
-
-.navigationButton {
-  border-radius: 5px !important;
-  background-color: #fff !important;
-  text-align: center !important;
-  color: #1A1A1A !important;
-  text-shadow: 0px 4px 4px 0px rgb(0 0 0 / 25%) !important;
-  box-shadow: 0px 4px 4px 0px rgb(0 0 0 / 25%) !important;
-  margin: auto !important;
-  display: block !important;
-  margin-top: 8% !important;
-  width: 50%;
-  max-width: 1000px;
-  min-width: 250px;
-}
-
-.navigationButton:focus {
-  background-color: #dddddd;
-}

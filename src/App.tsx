@@ -26,12 +26,13 @@ import {
   Quiz,
 } from "@mui/icons-material";
 import NavigationToolbar from "./Common/NavigationToolbar/NavigationToolbar";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizScreen from "./Screens/QuizScreen/QuizScreen";
 import EditRole from "./Screens/EditRole/EditRole";
-import AuthorityUtils from "./utils/AuthorityUtils";
+import AuthorityUtils, { AuthorityCheck } from "./utils/AuthorityUtils";
+import ClassRequests from "./Screens/ClassRequests/ClassRequests";
 
 export type NavigationRoute = {
   path: string;
@@ -39,11 +40,30 @@ export type NavigationRoute = {
   label?: string;
   value?: string;
   icon?: React.ReactNode;
+  authorityCheck?: AuthorityCheck;
+};
+
+type Heights = {
+  appbar: string;
+  toolbar: string;
 };
 
 export const UserContext = React.createContext<User>(null!);
+export const HeightsContext = React.createContext<Heights>({
+  appbar: "100px",
+  toolbar: "60px",
+});
 
 function App() {
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.up("sm"));
+  const md = useMediaQuery(theme.breakpoints.up("md"));
+  const lg = useMediaQuery(theme.breakpoints.up("lg"));
+  const heights = {
+    appbar: lg ? "60px" : md ? "55px" : sm ? "50px" : "50px",
+    toolbar: lg ? "60px" : md ? "55px" : sm ? "50px" : "50px",
+  };
+
   const getUserContext = (): User => {
     const base64Url = document.cookie.split("=")[1];
 
@@ -57,8 +77,6 @@ function App() {
   const [loggedUser, setLoggedUser] = useState<User>(() => {
     return getUserContext();
   });
-  const location = useLocation();
-  const canEditRoles = AuthorityUtils.canEditRoles(loggedUser.role.id);
 
   useEffect(() => {
     storeUserContext();
@@ -162,44 +180,59 @@ function App() {
         </RequireAuth>
       ),
     },
-  ];
-
-  canEditRoles &&
-    navigationRoutes.push({
+    {
       path: "/editRole",
       element: (
         <RequireAuth>
           <EditRole />
         </RequireAuth>
       ),
-    });
+      authorityCheck: AuthorityUtils.canEditRoles,
+    },
+    {
+      path: "/classRequests",
+      element: (
+        <RequireAuth>
+          <ClassRequests />
+        </RequireAuth>
+      ),
+      authorityCheck: (roleId: number) =>
+        AuthorityUtils.canRequestClass(roleId) ||
+        AuthorityUtils.canApproveClass(roleId),
+    },
+  ].filter(
+    ({ authorityCheck }) =>
+      !authorityCheck || authorityCheck(loggedUser.role.id)
+  );
 
   return (
     <UserContext.Provider value={loggedUser}>
-      <Stack height="100%">
-        <Box sx={{ flex: "1 1 auto" }}>
-          <Routes>
-            {navigationRoutes.map(({ path, element }, index) => (
-              <Route key={index} path={path} element={element} />
-            ))}
-          </Routes>
-        </Box>
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          theme="colored"
-          closeOnClick
-          rtl
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-        {loggedUser && (
-          <NavigationToolbar navigationRoutes={navigationRoutes} />
-        )}
-      </Stack>
+      <HeightsContext.Provider value={heights}>
+        <Stack height="100%">
+          <Box sx={{ flex: "1 1 auto" }}>
+            <Routes>
+              {navigationRoutes.map(({ path, element }, index) => (
+                <Route key={index} path={path} element={element} />
+              ))}
+            </Routes>
+          </Box>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            theme="colored"
+            closeOnClick
+            rtl
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+          {loggedUser && (
+            <NavigationToolbar navigationRoutes={navigationRoutes} />
+          )}
+        </Stack>
+      </HeightsContext.Provider>
     </UserContext.Provider>
   );
 }

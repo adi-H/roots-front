@@ -9,13 +9,8 @@ import rtlPlugin from "stylis-plugin-rtl";
 import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
+import CustomThemeProvider from "./theme";
 
-const theme = createTheme({
-  direction: "rtl",
-  typography: {
-    fontFamily: "Heebo",
-  },
-});
 const cacheRtl = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
@@ -24,11 +19,11 @@ const cacheRtl = createCache({
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ThemeProvider theme={theme}>
+      <CustomThemeProvider>
         <CacheProvider value={cacheRtl}>
           <App />
         </CacheProvider>
-      </ThemeProvider>
+      </CustomThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

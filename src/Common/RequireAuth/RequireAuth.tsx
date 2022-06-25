@@ -7,8 +7,8 @@ type Props = {
 };
 
 export const RequireAuth = (props: Props) => {
-  let user = useAuth();
-  let location = useLocation();
+  const user = useAuth();
+  const location = useLocation();
 
   if (!user) {
     // Redirect them to the /login page, but save the current location they were

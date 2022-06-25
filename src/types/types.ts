@@ -37,6 +37,14 @@ export interface ClassAssign {
   isApproved: boolean;
 }
 
+export type UserRequest = {
+  classId: number;
+  className: string;
+  classPlugaName: string;
+  classGdudName: string;
+  approvingUsers: Partial<User>[];
+};
+
 export interface Building {
   id: number;
   name: string;

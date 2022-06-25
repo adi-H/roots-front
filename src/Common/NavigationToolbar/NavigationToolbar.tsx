@@ -2,6 +2,7 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
+  Paper,
   styled,
   useMediaQuery,
   useTheme,
@@ -9,6 +10,7 @@ import {
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { NavigationRoute } from "../../App";
+import { useHeights } from "../../Hooks/useHeights";
 
 const StyledBottomNavigationAction = styled(BottomNavigationAction)(
   ({ theme }) => ({
@@ -26,14 +28,10 @@ type Props = {
 const NavigationToolbar = ({ navigationRoutes }: Props) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const theme = useTheme();
-  const sm = useMediaQuery(theme.breakpoints.up("sm"));
-  const md = useMediaQuery(theme.breakpoints.up("md"));
-  const lg = useMediaQuery(theme.breakpoints.up("lg"));
-  const TOOLBAR_HEIGHT = lg ? "60px" : md ? "55px" : sm ? "50px" : "50px";
+  const { toolbar: TOOLBAR_HEIGHT } = useHeights();
 
   return (
-    <>
+    <Paper elevation={3} sx={{ zIndex: 10 }}>
       <Box
         sx={{ flex: "0 1 " + TOOLBAR_HEIGHT, minHeight: TOOLBAR_HEIGHT }}
       ></Box>
@@ -66,7 +64,7 @@ const NavigationToolbar = ({ navigationRoutes }: Props) => {
             )
         )}
       </BottomNavigation>
-    </>
+    </Paper>
   );
 };
 

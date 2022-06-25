@@ -7,6 +7,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import { useHeights } from "../../Hooks/useHeights";
 import PageTitleBackButton from "./PageTitleBackButton";
 import { PageTitleLogo } from "./PageTitleLogo";
 
@@ -28,11 +29,7 @@ type Props = { title: string; disableBackButton?: boolean };
 
 export const PageTitle = (props: Props) => {
   const showBackButton = !props.disableBackButton;
-  const theme = useTheme();
-  const sm = useMediaQuery(theme.breakpoints.up("sm"));
-  const md = useMediaQuery(theme.breakpoints.up("md"));
-  const lg = useMediaQuery(theme.breakpoints.up("lg"));
-  const APPBAR_HEIGHT = lg ? "60px" : md ? "55px" : sm ? "50px" : "50px";
+  const { appbar: APPBAR_HEIGHT } = useHeights();
 
   return (
     <>
@@ -43,6 +40,7 @@ export const PageTitle = (props: Props) => {
           height: APPBAR_HEIGHT,
           background: "white",
           justifyContent: "center",
+          zIndex: 10,
         }}
       >
         <Stack

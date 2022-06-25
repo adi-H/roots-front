@@ -114,7 +114,7 @@ const EditRole = () => {
           <Button
             variant="contained"
             sx={{ width: "90%" }}
-            style={{ background: "#37dd93" }}
+            color="secondary"
             onClick={handleEditRole}
           >
             שינוי תפקיד

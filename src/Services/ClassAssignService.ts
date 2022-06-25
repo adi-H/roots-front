@@ -1,4 +1,4 @@
-import { ClassAssign } from "../types/types";
+import { ClassAssign, UserRequest } from "../types/types";
 import { axiosInstance } from "./AxiosInstance";
 
 export class ClassAssignService {
@@ -18,9 +18,15 @@ export class ClassAssignService {
     ).data;
   }
 
-  public static async getRequests() {
+  public static async getOpenRequests() {
     return (await axiosInstance.get<ClassAssign[]>("/classAssign/requests"))
       .data;
+  }
+
+  public static async getUserRequests() {
+    return (
+      await axiosInstance.get<UserRequest[]>("/classAssign/requests/user")
+    ).data;
   }
 
   public static async acceptRequest(classAssignId: number) {
