@@ -25,8 +25,7 @@ const MyRequests = () => {
   }, []);
 
   async function fetchUserRequests() {
-    const requests = await ClassAssignService.getUserRequests();
-    setRequests([...requests, ...requests]);
+    setRequests(await ClassAssignService.getUserRequests());
   }
 
   console.log(requests);
