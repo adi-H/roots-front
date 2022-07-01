@@ -11,6 +11,9 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
+      - name: set vars 
+        run: echo "KUBECONFIG='.k3s.yaml'" >> $GITHUB_ENV
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -35,5 +38,10 @@ jobs:
           push: true
           tags: dorsivan/roots-front:dev.3
 #          tags: dorsivan/roots-front:dev.${{ github.sha }}
+      
+      - name: helm upgrade 
+        run: helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.3
+
+
 
 
