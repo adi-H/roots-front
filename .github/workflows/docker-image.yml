@@ -53,7 +53,7 @@ jobs:
         run: | 
           ls -la
           pwd
-          KUBECONFIG=.k3s.yaml helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.3
+          KUBECONFIG=.k3s.yaml  DOCKER_HOST: tcp://docker:2376 helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.3
 
 
 
