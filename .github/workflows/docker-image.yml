@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: set vars 
-        run: echo "KUBECONFIG=\".k3s.yaml\"" >> $GITHUB_ENV
+        run: echo "KUBECONFIG=\"${GITHUB_WORKSPACE}/.k3s.yaml\"" >> $GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -39,13 +39,13 @@ jobs:
           tags: dorsivan/roots-front:dev.3
 #          tags: dorsivan/roots-front:dev.${{ github.sha }}
       
-      - name: try to set permissions
-        run: chown 644 .k3s.yaml
+      # - name: try to set permissions
+      #   run: chown 644 .k3s.yaml
 
       - name: helm upgrade 
         run: | 
           ls -la
-          pwd 
+          pwd
           helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.3
 
 
