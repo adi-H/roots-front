@@ -11,14 +11,14 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: set vars 
         run: echo "KUBECONFIG=\"${GITHUB_WORKSPACE}/.k3s.yaml\"" >> $GITHUB_ENV
 
       - name: override kubectl config file 
         run: cp  ${GITHUB_WORKSPACE}/.k3s.yaml ~/.kube/config
-
-      - name: Checkout code
-        uses: actions/checkout@v2
 
       - name: Set tag env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
