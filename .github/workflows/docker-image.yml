@@ -17,8 +17,8 @@ jobs:
       - name: set vars 
         run: echo "KUBECONFIG=\"${GITHUB_WORKSPACE}/.k3s.yaml\"" >> $GITHUB_ENV
 
-      - name: override kubectl config file 
-        run: cp  ${GITHUB_WORKSPACE}/.k3s.yaml ~/.kube/config
+      # - name: override kubectl config file 
+      #   run: cp  ${GITHUB_WORKSPACE}/.k3s.yaml ~/.kube/config
 
       - name: Set tag env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
