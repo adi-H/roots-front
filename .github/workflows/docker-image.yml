@@ -40,7 +40,9 @@ jobs:
 #          tags: dorsivan/roots-front:dev.${{ github.sha }}
       
       - name: helm upgrade 
-        run: helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.3
+        run: | 
+          ll  
+          helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.3
 
 
 
