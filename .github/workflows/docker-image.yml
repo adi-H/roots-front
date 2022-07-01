@@ -14,6 +14,9 @@ jobs:
       - name: set vars 
         run: echo "KUBECONFIG=\"${GITHUB_WORKSPACE}/.k3s.yaml\"" >> $GITHUB_ENV
 
+      - name: override kubectl config file 
+        run: cp  ${GITHUB_WORKSPACE}/.k3s.yaml ~/.kube/config
+
       - name: Checkout code
         uses: actions/checkout@v2
 
