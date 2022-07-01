@@ -1,8 +1,10 @@
+name: Create Release
+
 on:
   push:
-    branches: ["adding-actions"]
-
-name: Create Release
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   create_release:
@@ -27,8 +29,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and save
+      - name: build and push image 
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: dorsivan/roots-front:dev.0.2
+          tags: dorsivan/roots-front:dev.3
+#          tags: dorsivan/roots-front:dev.${{ github.sha }}
+
+
