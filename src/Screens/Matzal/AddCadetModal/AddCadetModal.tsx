@@ -42,7 +42,7 @@ export const AddCadetModal = (props: Props) => {
     const newAttendances: Attendance[] = [];
     selectedCadets.forEach((cadet) =>
       newAttendances.push({
-        user: { id: cadet.id } as User,
+        userId: cadet.id,
         inAttendance: false,
         reason,
       })

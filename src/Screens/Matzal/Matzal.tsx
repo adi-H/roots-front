@@ -8,13 +8,14 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Checkbox,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
 import { SocketIOService } from "../../Services/SocketIOService";
 import { UnitService } from "../../Services/UnitService";
 import { Utilities } from "../../Services/Utilities";
-import { Attendance, Unit } from "../../types/types";
+import { Attendance, Unit, User } from "../../types/types";
 import { AddCadetModal } from "./AddCadetModal/AddCadetModal";
 import {
   CleaningServices,
@@ -90,7 +91,31 @@ export const Matzal = () => {
     const fetchCadets = async () => {
       const newCompanyWithCadets = await UnitService.getCadetsInCompany();
 
-      setCompanyWithCadets(newCompanyWithCadets);
+      const newCadets = newCompanyWithCadets.children
+        .reduce((allMembers, currTeam) => {
+          if (currTeam.teamCadets) allMembers.push(...currTeam.teamCadets);
+          return allMembers;
+        }, [] as User[]);
+
+      const newAttendances: Attendance[] = newCadets
+        .reduce((attendances, cadet): Attendance[] => {
+          if (cadet.attendance === null) {
+            attendances.push({
+              userId: cadet.id,
+              inAttendance: null,
+              reason: null,
+            });
+          }
+
+          return attendances;
+        }, [] as Attendance[]
+        );
+
+      setCompanyWithCadets(
+        (newAttendances.length > 0)
+          ? await UnitService.getCadetsInCompany()
+          : newCompanyWithCadets
+      )
     };
 
     SocketIOService.socket.on("sendCompany", (company: Unit) => {
@@ -98,7 +123,17 @@ export const Matzal = () => {
     });
 
     fetchCadets();
-  }, [companyWithCadets]);
+
+    const refetchDataInterval = setInterval(async () => {
+      setCompanyWithCadets(await UnitService.getCadetsInCompany());
+    }, 5000);
+
+    return () => {
+      clearInterval(refetchDataInterval);
+    }
+  }, []);
+
+
 
   const numberOfCadetsDetails = useMemo(() => {
     let amountOfCadets = 0;
@@ -124,18 +159,19 @@ export const Matzal = () => {
     }
   };
 
-  const handleDeleteAttendance = async (id: string) => {
-    AttendanceService.delete(id);
-  };
+  const updateAttendances = async (attendances: Attendance[]) => {
+    attendances.forEach(attendance => {
+      if (attendance.inAttendance !== false
+        && attendance.reason !== null) {
+        attendance.reason = null;
+      }
+    });
 
-  const addAttendances = async (attendances: Attendance[]) => {
     try {
-      await AttendanceService.addAttendances(attendances);
-      toast.success(
-        attendances.length === 1 ? "הצוער נוסף בהצלחה" : "הצוערים נוספו בהצלחה"
-      );
+      await AttendanceService.updateAttendances(attendances);
+      setCompanyWithCadets(await UnitService.getCadetsInCompany());
     } catch (e) {
-      toast.error("אירעה שגיאה בהוספת הצוערים");
+      toast.error("אירעה שגיאה בעדכון הצוערים");
     }
   };
 
@@ -204,12 +240,26 @@ export const Matzal = () => {
         פירוט
       </Typography>
       {companyWithCadets?.children.map((team) => {
-        const absentCadets = team.teamCadets
-          ? team.teamCadets.filter(
-              (cadet) => cadet.attendance?.inAttendance === false
-            )
-          : [];
-        const isAbsentCadets = absentCadets.length > 0;
+        const teamCadets = (team.teamCadets
+          ? team.teamCadets
+          : []).sort((cadet1, cadet2) => {
+
+            // Order unmarked first
+            if (cadet1.attendance.inAttendance !== null
+              && cadet2.attendance.inAttendance === null) return 1;
+            if (cadet1.attendance.inAttendance === null
+              && cadet2.attendance.inAttendance !== null) return -1;
+
+            // Order missings second
+            if (cadet1.attendance.inAttendance
+              && !cadet2.attendance.inAttendance) return 1;
+            if (!cadet1.attendance.inAttendance
+              && cadet2.attendance.inAttendance) return -1;
+
+            // Secondary order by full name
+            return `${cadet1.firstName} ${cadet1.lastName}`.localeCompare(`${cadet2.firstName} ${cadet2.lastName}`);
+          });
+        const isAbsentCadets: boolean = teamCadets.length > 0;
 
         return (
           <Accordion
@@ -222,33 +272,33 @@ export const Matzal = () => {
                 צוות {team.name}
               </Typography>
               <Typography sx={{ color: "text.secondary" }}>
-                {isAbsentCadets ? `${absentCadets.length} חסרים` : "אין חסרים"}
+                {isAbsentCadets ? `${teamCadets.length} חסרים` : "אין חסרים"}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {absentCadets.map((cadet) => (
+              {teamCadets.map((cadet) => (
                 <Stack
                   key={cadet.id}
                   direction="row"
                   alignItems="center"
                   spacing={2}
                 >
-                  <IconButton
-                    onClick={() => {
-                      handleDeleteAttendance(cadet.id.toString());
 
-                      if (absentCadets.length === 1) {
-                        toggleExpand(team.id);
-                      }
+                  <Checkbox
+                    checked={!!cadet.attendance?.inAttendance}
+                    sx={{ color: (cadet.attendance === null || cadet.attendance?.inAttendance === null) ? "default.main" : "error.main" }}
+                    color="success"
+                    onChange={e => {
+                      cadet.attendance.inAttendance = e.target.checked ? true : null;
+                      updateAttendances([cadet.attendance]);
                     }}
-                  >
-                    <Delete />
-                  </IconButton>
+                  />
+
                   <Typography fontSize={"1.2rem"}>
                     {Utilities.getFullName(cadet)}
                   </Typography>
                   <Typography fontSize={"1rem"} color="text.secondary">
-                    {cadet.attendance.reason}
+                    {cadet.attendance?.reason}
                   </Typography>
                 </Stack>
               ))}
@@ -259,7 +309,7 @@ export const Matzal = () => {
       <AddCadetModal
         teams={companyWithCadets?.children}
         isOpen={isModalOpen}
-        handleAddAttendance={addAttendances}
+        handleAddAttendance={updateAttendances}
         onClose={() => {
           setIsModalOpen(false);
         }}
