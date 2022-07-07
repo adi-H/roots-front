@@ -5,14 +5,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Swal from 'sweetalert2';
 import { ItemsService } from '../../../Services/ItemsService';
 import itemFields from './itemFields'
+import { Item } from '../../../types/types';
 
 type propsType = {
     isOpen: boolean,
     ownerId: number,
-    handleClose: () => void
+    handleAddItem: (itemToCreate: Item) => void
+    handleClose: any
 }
 
-const { NAME, READY_TO_USE_QUANTITY, UNUSABLE_QUANTITY, DESCRIPTION } = itemFields;
+const { NAME, TOTAL_QUANTITY, UNUSABLE_QUANTITY, DESCRIPTION } = itemFields;
 
 const NAME_LABEL = 'שם פריט';
 const NORMAL_QUANTITY_LABEL = 'כמות זמינה';
@@ -21,14 +23,14 @@ const DESCRIPTION_LABEL = 'תיאור';
 
 const schema = yup.object({
     [NAME]: yup.string().required('שם פריט חובה'),
-    [READY_TO_USE_QUANTITY]: yup.number().positive('כמות חייבת להיות גדולה מ0')
+    [TOTAL_QUANTITY]: yup.number().positive('כמות חייבת להיות גדולה מ0')
         .integer().typeError('מספר חייב להיות בעל ערך').required('כמות חובה'),
     [UNUSABLE_QUANTITY]: yup.number().min(0, 'כמות חייבת להיות גדולה או שווה ל0').integer()
         .typeError('מספר חייב להיות בעל ערך').required('כמות בלאי חובה. במידה ואין השאירו 0'),
     [DESCRIPTION]: yup.string()
 });
 
-const AddItemDialog = ({ isOpen, ownerId, handleClose }: propsType) => {
+const AddItemDialog = ({ isOpen, ownerId, handleAddItem, handleClose }: propsType) => {
     const { control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: 'onChange'
@@ -39,7 +41,7 @@ const AddItemDialog = ({ isOpen, ownerId, handleClose }: propsType) => {
     const onSubmit = async (itemToCreate: any) => {
         try {
             await ItemsService.createItem({ ...itemToCreate, ownerId })
-            handleClose()
+            handleAddItem(itemToCreate)
             Swal.fire({ title: 'פריט נוצר בהצלחה', icon: 'success', timer: 3000 });
         } catch (error) {
             Swal.fire({
@@ -79,7 +81,7 @@ const AddItemDialog = ({ isOpen, ownerId, handleClose }: propsType) => {
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Controller
-                                name={READY_TO_USE_QUANTITY}
+                                name={TOTAL_QUANTITY}
                                 control={control}
                                 defaultValue={0}
                                 render={({ field }) => (
@@ -87,8 +89,8 @@ const AddItemDialog = ({ isOpen, ownerId, handleClose }: propsType) => {
                                         name={field.name}
                                         value={field.value}
                                         onChange={field.onChange}
-                                        error={Boolean(errors[READY_TO_USE_QUANTITY])}
-                                        label={errors[READY_TO_USE_QUANTITY]?.message || NORMAL_QUANTITY_LABEL}
+                                        error={Boolean(errors[TOTAL_QUANTITY])}
+                                        label={errors[TOTAL_QUANTITY]?.message || NORMAL_QUANTITY_LABEL}
                                         fullWidth
                                         type='number'
                                         margin='normal'
