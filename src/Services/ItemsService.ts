@@ -14,6 +14,10 @@ export class ItemsService {
     await axiosInstance.post<Item>(`/items`, itemToCreate);
   }
 
+  public static async editItem(itemToEdit: Item) {
+    await axiosInstance.put<Item>(`/items`, itemToEdit);
+  }
+
   public static async borrowItem(itemToBorrom: ItemToBorrow) {
     await axiosInstance.post<ItemToBorrow>(`/items/borrow`, itemToBorrom);
   }

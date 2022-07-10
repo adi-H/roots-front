@@ -9,8 +9,10 @@ import { Item } from '../../../types/types';
 
 type propsType = {
     isOpen: boolean,
+    item: any | null,
     ownerId: number,
-    handleAddItem: (itemToCreate: Item) => void
+    handleAddItem: (itemToCreate: Item) => void,
+    handleEditItem: (itemToEdit: Item) => void,
     handleClose: any
 }
 
@@ -30,8 +32,9 @@ const schema = yup.object({
     [DESCRIPTION]: yup.string()
 });
 
-const AddItemDialog = ({ isOpen, ownerId, handleAddItem, handleClose }: propsType) => {
+const AddItemDialog = ({ isOpen, item, ownerId, handleAddItem, handleEditItem, handleClose }: propsType) => {
     const { control, handleSubmit, formState } = useForm({
+        defaultValues: item || undefined,
         resolver: yupResolver(schema),
         mode: 'onChange'
     });
@@ -40,9 +43,15 @@ const AddItemDialog = ({ isOpen, ownerId, handleAddItem, handleClose }: propsTyp
 
     const onSubmit = async (itemToCreate: any) => {
         try {
-            await ItemsService.createItem({ ...itemToCreate, ownerId })
-            handleAddItem(itemToCreate)
-            Swal.fire({ title: 'פריט נוצר בהצלחה', icon: 'success', timer: 3000 });
+            if (item !== null) {
+                await ItemsService.editItem(itemToCreate)
+                handleEditItem(itemToCreate)
+                Swal.fire({ title: 'פריט עודכן בהצלחה', icon: 'success', timer: 3000 });
+            } else {
+                await ItemsService.createItem({ ...itemToCreate, ownerId })
+                handleAddItem(itemToCreate)
+                Swal.fire({ title: 'פריט נוצר בהצלחה', icon: 'success', timer: 3000 });
+            }
         } catch (error) {
             Swal.fire({
                 title: 'קרתה שגיאה בשליחת הבקשה', icon: 'error', timer: 3000

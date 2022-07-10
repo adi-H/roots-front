@@ -11,11 +11,18 @@ import BorrowItemDialog from './borrowItemDialog';
 import { Item } from '../../types/types';
 import { ItemsService } from '../../Services/ItemsService';
 
+type addDialogStateType = {
+  isOpen: boolean,
+  currentItem: any | null
+}
 
 export const Logistics = () => {
   const [itemsList, setItemsList] = useState<Item[]>([]);
-  const [currentItem, setCurrentItem] = useState<Item | null>(null);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
+  const [addDialogState, setAddDialogState] = useState<addDialogStateType>({
+    isOpen: false,
+    currentItem: null
+  })
+  const [currentItemToBorrow, setCurrentItemToBorrow] = useState<Item | null>(null);
 
   const user = useAuth();
 
@@ -32,16 +39,24 @@ export const Logistics = () => {
     }
   }
 
-  const handleCloseAddItemDialog = () => {
-    setIsAddDialogOpen(false)
+  const handleOpenAddItemDialog = () => {
+    setAddDialogState({ isOpen: true, currentItem: null })
   }
 
-  const handleCloseBorrowItemDialog = () => {
-    setCurrentItem(null)
+  const handleCloseAddItemDialog = () => {
+    setAddDialogState({ isOpen: false, currentItem: null })
+  }
+
+  const handleOpenEditDialog = (itemToEdit: Item) => {
+    setAddDialogState({ isOpen: true, currentItem: itemToEdit })
   }
 
   const handleOpenBorrowDialog = (item: Item) => {
-    setCurrentItem(item);
+    setCurrentItemToBorrow(item);
+  }
+
+  const handleCloseBorrowItemDialog = () => {
+    setCurrentItemToBorrow(null)
   }
 
   const handleAddItem = (itemToCreate: Item) => {
@@ -49,13 +64,32 @@ export const Logistics = () => {
     handleCloseAddItemDialog();
   }
 
+  const handleEditItem = (itemToEdit: Item) => {
+    const items = itemsList.map(item => item.id === itemToEdit.id ? itemToEdit : item)
+    setItemsList(items)
+    handleCloseAddItemDialog();
+  }
+
+  const handleDeleteItem = (itemIdToDelete: number) => {
+    Swal.fire({
+      title: 'האם אתה בטוח שאתה רוצה למחוק מוצר זה?',
+      showCancelButton: true,
+      cancelButtonText: 'בטל',
+      confirmButtonText: 'כן, מחק!'
+    }).then(result => {
+      if (result.isConfirmed) {
+        setItemsList((currItemsList: Item[]) => currItemsList.filter(item => item.id !== itemIdToDelete));
+      }
+    })
+  };
+
   return (
     <Paper style={{ overflow: "hidden" }}>
       <PageTitle title="לוגיסטיקה" disableBackButton />
       <Grid container style={{ paddingTop: '16px' }}>
         <Button
           endIcon={<Add />}
-          onClick={() => setIsAddDialogOpen(true)}
+          onClick={handleOpenAddItemDialog}
           variant='contained'
           color='primary'
           size='large'
@@ -64,21 +98,24 @@ export const Logistics = () => {
         </Button>
         <LogisticTable
           itemsList={itemsList}
-          setItemsList={setItemsList}
+          handleOpenEditDialog={handleOpenEditDialog}
           handleOpenBorrowDialog={handleOpenBorrowDialog}
+          handleDeleteItem={handleDeleteItem}
         />
-        {isAddDialogOpen &&
+        {addDialogState.isOpen &&
           <AddItemDialog
-            isOpen={isAddDialogOpen}
+            isOpen={addDialogState.isOpen}
+            item={addDialogState.currentItem}
             handleAddItem={handleAddItem}
+            handleEditItem={handleEditItem}
             handleClose={handleCloseAddItemDialog}
             ownerId={user.team.parent.id}
           />}
-        {currentItem !== null &&
+        {currentItemToBorrow !== null &&
           <BorrowItemDialog
-            isOpen={currentItem !== null}
-            itemId={currentItem.id}
-            itemName={currentItem.name}
+            isOpen={currentItemToBorrow !== null}
+            itemId={currentItemToBorrow.id}
+            itemName={currentItemToBorrow.name}
             handleClose={handleCloseBorrowItemDialog}
           />}
       </Grid>

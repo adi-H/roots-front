@@ -9,7 +9,7 @@ import {
     IconButton,
     Tooltip
 } from '@mui/material';
-import { Delete, Undo } from '@mui/icons-material/';
+import { Delete, Undo, Edit } from '@mui/icons-material/';
 import Swal from 'sweetalert2';
 import { ItemsService } from '../../Services/ItemsService';
 import { itemFields } from './addItemDialog'
@@ -17,7 +17,8 @@ import { Item } from '../../types/types';
 
 type propsType = {
     itemsList: Item[],
-    setItemsList: any,
+    handleOpenEditDialog: (item: Item) => void
+    handleDeleteItem: (itemIdToDelete: number) => void,
     handleOpenBorrowDialog: (item: Item) => void
 }
 
@@ -34,15 +35,16 @@ const tableRows: tableRow[] = [
 
 const tableActions = [
     { id: 'deleteIcon', name: '' },
-    { id: 'borrowIcon', name: '' }
+    { id: 'borrowIcon', name: '' },
+    { id: 'editIcon', name: '' }
 ]
 
-const LogisticTable = ({ itemsList, setItemsList, handleOpenBorrowDialog }: propsType) => {
+const LogisticTable = ({ itemsList, handleOpenEditDialog, handleDeleteItem ,handleOpenBorrowDialog }: propsType) => {
 
-    const handleDeleteItem = async (itemIdToDelete: number) => {
+    const handleDeleteItemFromList = async (itemIdToDelete: number) => {
         try {
             await ItemsService.deleteItem(itemIdToDelete);
-            setItemsList((currItemsList: Item[]) => currItemsList.filter(item => item.id !== itemIdToDelete));
+            handleDeleteItem(itemIdToDelete);
         } catch (e) {
             Swal.fire({ title: 'קרתה שגיאה בשליחת הבקשה', icon: 'error', timer: 3000 });
         }
@@ -66,9 +68,16 @@ const LogisticTable = ({ itemsList, setItemsList, handleOpenBorrowDialog }: prop
                                     {item[row.id]}
                                 </TableCell>
                             ))}
+                            <TableCell key={`${item.id}edit`} align='center'>
+                                <Tooltip title='עריכה'>
+                                    <IconButton color='info' onClick={() => handleOpenEditDialog(item)}>
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                            </TableCell>
                             <TableCell key={`${item.id}delete`} align='center'>
                                 <Tooltip title='מחיקה'>
-                                    <IconButton color='error' onClick={() => handleDeleteItem(item.id)}>
+                                    <IconButton color='error' onClick={() => handleDeleteItemFromList(item.id)}>
                                         <Delete />
                                     </IconButton>
                                 </Tooltip>
