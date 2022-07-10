@@ -45,6 +45,7 @@ jobs:
         with:
           push: true
           tags: dorsivan/roots-front:dev.3
+          file: Dockerfile.prod
 #          tags: dorsivan/roots-front:dev.${{ github.sha }}
       
       # - name: try to set permissions
