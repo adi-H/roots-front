@@ -44,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: dorsivan/roots-front:dev.3
+          tags: dorsivan/roots-front:dev.${{ github.sha }}
           file: Dockerfile.prod
 #          tags: dorsivan/roots-front:dev.${{ github.sha }}
       
@@ -55,7 +55,7 @@ jobs:
         run: | 
           ls -la
           pwd
-          KUBECONFIG=.k3s.yaml helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.3
+          KUBECONFIG=.k3s.yaml helm upgrade mvp ci/k3s/roots-front/ --install --values=ci/k3s/roots-front/values.yaml --set image.tag=dev.${{ github.sha }}
 
 
 

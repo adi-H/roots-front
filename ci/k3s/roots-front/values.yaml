@@ -8,8 +8,8 @@ image:
   repository: dorsivan/roots-front
   pullPolicy: Always #IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: dev.3
-  # tag: ""
+  # tag: dev.3
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
