@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
     Paper,
     TableContainer,
@@ -10,54 +9,46 @@ import {
     IconButton,
     Tooltip
 } from '@mui/material';
-import { Delete } from '@mui/icons-material/';
+import { Delete, Undo, Edit } from '@mui/icons-material/';
 import Swal from 'sweetalert2';
 import { ItemsService } from '../../Services/ItemsService';
 import { itemFields } from './addItemDialog'
 import { Item } from '../../types/types';
-import { useAuth } from '../../Hooks/useAuth';
+
+type propsType = {
+    itemsList: Item[],
+    handleOpenEditDialog: (item: Item) => void
+    handleDeleteItem: (itemIdToDelete: number) => void,
+    handleOpenBorrowDialog: (item: Item) => void
+}
 
 type tableRow = { id: string, name: string }
 
-const { NAME, READY_TO_USE_QUANTITY, UNUSABLE_QUANTITY, DESCRIPTION } = itemFields
+const { NAME, TOTAL_QUANTITY, UNUSABLE_QUANTITY, DESCRIPTION } = itemFields
 
 const tableRows: tableRow[] = [
     { id: NAME, name: 'שם פריט' },
-    { id: READY_TO_USE_QUANTITY, name: 'כמות זמינה' },
+    { id: TOTAL_QUANTITY, name: 'כמות זמינה' },
     { id: UNUSABLE_QUANTITY, name: 'כמות בלאי' },
-    { id: DESCRIPTION, name: 'פירוט' },
+    { id: DESCRIPTION, name: 'פירוט' }
 ];
 
 const tableActions = [
-    { id: 'deleteIcon', name: '' }
+    { id: 'deleteIcon', name: '' },
+    { id: 'borrowIcon', name: '' },
+    { id: 'editIcon', name: '' }
 ]
 
-const LogisticTable = () => {
-    const [itemsList, setItemsList] = useState<Item[]>([]);
+const LogisticTable = ({ itemsList, handleOpenEditDialog, handleDeleteItem ,handleOpenBorrowDialog }: propsType) => {
 
-    const user = useAuth();
-
-    useEffect(() => {
-        getItemsList(user.team.parent.id);
-    }, [user.team.parent.id]);
-
-    async function getItemsList(ownerId: number) {
+    const handleDeleteItemFromList = async (itemIdToDelete: number) => {
         try {
-            const itemsList = await ItemsService.getItemsList(ownerId);
-            setItemsList(itemsList);
+            await ItemsService.deleteItem(itemIdToDelete);
+            handleDeleteItem(itemIdToDelete);
         } catch (e) {
             Swal.fire({ title: 'קרתה שגיאה בשליחת הבקשה', icon: 'error', timer: 3000 });
         }
-    }
-
-    const handleDeleteItem = async (itemIdToDelete: number) => {
-        try {
-          await ItemsService.deleteItem(itemIdToDelete);
-          setItemsList(currItemsList => currItemsList.filter(item => item.id !== itemIdToDelete));
-        } catch (e) {
-          Swal.fire({ title: 'קרתה שגיאה בשליחת הבקשה', icon: 'error', timer: 3000 });
-        }
-      };
+    };
 
     return (
         <TableContainer component={Paper}>
@@ -77,10 +68,24 @@ const LogisticTable = () => {
                                     {item[row.id]}
                                 </TableCell>
                             ))}
+                            <TableCell key={`${item.id}edit`} align='center'>
+                                <Tooltip title='עריכה'>
+                                    <IconButton color='info' onClick={() => handleOpenEditDialog(item)}>
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                            </TableCell>
                             <TableCell key={`${item.id}delete`} align='center'>
                                 <Tooltip title='מחיקה'>
-                                    <IconButton color='error' onClick={() => handleDeleteItem(item.id)}>
+                                    <IconButton color='error' onClick={() => handleDeleteItemFromList(item.id)}>
                                         <Delete />
+                                    </IconButton>
+                                </Tooltip>
+                            </TableCell>
+                            <TableCell key={`${item.id}borrow`} align='center'>
+                                <Tooltip title='השאלה'>
+                                    <IconButton color='info' onClick={() => handleOpenBorrowDialog(item)}>
+                                        <Undo />
                                     </IconButton>
                                 </Tooltip>
                             </TableCell>

@@ -66,6 +66,13 @@ export interface Item {
   usedBy: Unit;
 }
 
+export interface ItemToBorrow {
+  itemId: number;
+  user: number;
+  quantityToBorrow: number;
+  description: string;
+}
+
 export interface Attendance {
   user: User;
   reason: string;
