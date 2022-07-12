@@ -9,6 +9,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
@@ -19,7 +20,7 @@ import { Attendance, Unit, User } from "../../types/types";
 import { AddCadetModal } from "./AddCadetModal/AddCadetModal";
 import {
   CleaningServices,
-  Delete,
+  Refresh,
   ExpandMore,
   PersonRemove,
 } from "@mui/icons-material";
@@ -133,8 +134,6 @@ export const Matzal = () => {
     }
   }, []);
 
-
-
   const numberOfCadetsDetails = useMemo(() => {
     let amountOfCadets = 0;
     let amountOfAbsent = 0;
@@ -149,11 +148,11 @@ export const Matzal = () => {
     return { amountOfAbsent, amountOfCadets };
   }, [companyWithCadets]);
 
-  const handleDeleteAll = async () => {
+  const handleResetTeam = async (teamId: number) => {
     try {
-      await AttendanceService.clear();
-      setExpanded([]);
-      toast.success('המצ"ל נוקה בהצלחה');
+      await AttendanceService.clearTeam(teamId);
+      setCompanyWithCadets(await UnitService.getCadetsInCompany());
+      toast.success(`מצ"ל צוות ${teamId} נוקה בהצלחה`);
     } catch (e) {
       toast.error('אירעה שגיאה בניקוי המצ"ל');
     }
@@ -226,7 +225,7 @@ export const Matzal = () => {
             style={{
               background: "#DF6E6E",
             }}
-            onClick={() => handleDeleteAll()}
+            onClick={() => { }}
           >
             <CleaningServices sx={{ color: "white" }} />
           </ClearCadetsButton>
@@ -259,20 +258,37 @@ export const Matzal = () => {
             // Secondary order by full name
             return `${cadet1.firstName} ${cadet1.lastName}`.localeCompare(`${cadet2.firstName} ${cadet2.lastName}`);
           });
-        const isAbsentCadets: boolean = teamCadets.length > 0;
+        const presentCadetsCount = teamCadets.reduce(
+          (missingAmount, cadet) =>
+            missingAmount += cadet.attendance.inAttendance ? 1 : 0
+          , 0);
 
         return (
           <Accordion
             key={team.id}
             expanded={expanded.includes(team.id)}
-            onChange={() => isAbsentCadets && toggleExpand(team.id)}
+            onChange={() => teamCadets.length > 0 && toggleExpand(team.id)}
           >
-            <AccordionSummary expandIcon={isAbsentCadets && <ExpandMore />}>
+            <AccordionSummary expandIcon={teamCadets.length > 0 && <ExpandMore />}>
+              <FormControlLabel
+                aria-label="Enter Name"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleResetTeam(team.id);
+                }}
+                onFocus={(event) => event.stopPropagation()}
+                control={
+                  <IconButton color="default" aria-label="Reset team attendance">
+                    <Refresh />
+                  </IconButton>}
+                label=""
+              />
               <Typography sx={{ width: "33%", flexShrink: 0 }}>
                 צוות {team.name}
               </Typography>
               <Typography sx={{ color: "text.secondary" }}>
-                {isAbsentCadets ? `${teamCadets.length} חסרים` : "אין חסרים"}
+                {teamCadets.length > 0
+                  ? `${presentCadetsCount}/${teamCadets.length} צוערים` : "אין צוערים בצוות"}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>

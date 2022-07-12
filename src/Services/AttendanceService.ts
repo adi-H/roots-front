@@ -6,7 +6,7 @@ export class AttendanceService {
     return await axiosInstance.post("/attendance", attendances);
   }
 
-  public static async clear() {
-    // return await axiosInstance.get("/attendance/clear");
+  public static async clearTeam(teamId: number) {
+    return await axiosInstance.put(`/attendance/team/${teamId}/clear`);
   }
 }
