@@ -8,5 +8,5 @@ export class AttendanceService {
 
   public static async clearTeam(teamId: number) {
     return await axiosInstance.put(`/attendance/team/${teamId}/clear`);
-  }
+  } 
 }

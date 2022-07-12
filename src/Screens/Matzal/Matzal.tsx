@@ -10,6 +10,7 @@ import {
   AccordionSummary,
   Checkbox,
   FormControlLabel,
+  Chip
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { PageTitle } from "../../Common/PageTitle/PageTitle";
@@ -17,12 +18,13 @@ import { SocketIOService } from "../../Services/SocketIOService";
 import { UnitService } from "../../Services/UnitService";
 import { Utilities } from "../../Services/Utilities";
 import { Attendance, Unit, User } from "../../types/types";
-import { AddCadetModal } from "./AddCadetModal/AddCadetModal";
+import { AddMissingCadetModal } from "./AddMissingCadetModal/AddMissingCadetModal";
+import { ConfirmationModal } from "./ConfirmationModal";
 import {
   CleaningServices,
   Refresh,
   ExpandMore,
-  PersonRemove,
+  PersonRemove
 } from "@mui/icons-material";
 import { AttendanceService } from "../../Services/AttendanceService";
 import { CenteredFlexBox } from "../../Common/CenteredFlexBox/CenteredFlexBox";
@@ -50,7 +52,7 @@ const StyledActionButton = styled(IconButton)(({ theme }) => ({
   aspectRatio: "1 / 1",
 }));
 
-const AddCadetButton = styled(StyledActionButton)(({ theme }) => ({
+const AddMissingCadetButton = styled(StyledActionButton)(({ theme }) => ({
   right: "25%",
   transform: "translateX(50%)",
 }));
@@ -85,7 +87,9 @@ const MatzalHeaderInfoLabel = styled((props: TypographyProps) => (
 
 export const Matzal = () => {
   const [companyWithCadets, setCompanyWithCadets] = useState<Unit>(null!);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [chosenEditCadet, setChosenEditCadet] = useState<User[]>([]);
+  const [isMissingCadetModalOpen, setIsMissingCadetModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [expanded, setExpanded] = useState<number[]>([]);
 
   useEffect(() => {
@@ -111,6 +115,8 @@ export const Matzal = () => {
           return attendances;
         }, [] as Attendance[]
         );
+
+      await updateAttendances(newAttendances);
 
       setCompanyWithCadets(
         (newAttendances.length > 0)
@@ -182,6 +188,24 @@ export const Matzal = () => {
     );
   };
 
+  const cadetCompare = (cadet1: User, cadet2: User) => {
+    // Order unmarked first
+    if (cadet1.attendance.inAttendance !== null
+      && cadet2.attendance.inAttendance === null) return 1;
+    if (cadet1.attendance.inAttendance === null
+      && cadet2.attendance.inAttendance !== null) return -1;
+
+    // Order missings second
+    if (cadet1.attendance.inAttendance
+      && !cadet2.attendance.inAttendance) return 1;
+    if (!cadet1.attendance.inAttendance
+      && cadet2.attendance.inAttendance) return -1;
+
+    // Secondary order by full name
+    return `${cadet1.firstName} ${cadet1.lastName}`
+      .localeCompare(`${cadet2.firstName} ${cadet2.lastName}`);
+  };
+
   return (
     <>
       <PageTitle title={'מצ"ל לחייל'} disableBackButton />
@@ -213,19 +237,21 @@ export const Matzal = () => {
               מצ"ל
             </MatzalHeaderInfoLabel>
           </Stack>
-          <AddCadetButton
+          <AddMissingCadetButton
             style={{
               background: "#F6E971",
             }}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsMissingCadetModalOpen(true)}
           >
             <PersonRemove sx={{ color: "white" }} />
-          </AddCadetButton>
+          </AddMissingCadetButton>
           <ClearCadetsButton
             style={{
               background: "#DF6E6E",
             }}
-            onClick={() => { }}
+            onClick={() => {
+              setIsConfirmationModalOpen(true);
+            }}
           >
             <CleaningServices sx={{ color: "white" }} />
           </ClearCadetsButton>
@@ -241,23 +267,7 @@ export const Matzal = () => {
       {companyWithCadets?.children.map((team) => {
         const teamCadets = (team.teamCadets
           ? team.teamCadets
-          : []).sort((cadet1, cadet2) => {
-
-            // Order unmarked first
-            if (cadet1.attendance.inAttendance !== null
-              && cadet2.attendance.inAttendance === null) return 1;
-            if (cadet1.attendance.inAttendance === null
-              && cadet2.attendance.inAttendance !== null) return -1;
-
-            // Order missings second
-            if (cadet1.attendance.inAttendance
-              && !cadet2.attendance.inAttendance) return 1;
-            if (!cadet1.attendance.inAttendance
-              && cadet2.attendance.inAttendance) return -1;
-
-            // Secondary order by full name
-            return `${cadet1.firstName} ${cadet1.lastName}`.localeCompare(`${cadet2.firstName} ${cadet2.lastName}`);
-          });
+          : []).sort(cadetCompare);
         const presentCadetsCount = teamCadets.reduce(
           (missingAmount, cadet) =>
             missingAmount += cadet.attendance.inAttendance ? 1 : 0
@@ -313,21 +323,62 @@ export const Matzal = () => {
                   <Typography fontSize={"1.2rem"}>
                     {Utilities.getFullName(cadet)}
                   </Typography>
-                  <Typography fontSize={"1rem"} color="text.secondary">
-                    {cadet.attendance?.reason}
-                  </Typography>
+
+                  {cadet.attendance.inAttendance ||
+                    ((cadet.attendance.inAttendance === false && cadet.attendance.reason) ?
+                      (<Chip
+                        label={cadet.attendance.reason}
+                        variant="filled"
+                        color="error"
+                        size="small"
+                        onClick={() => {
+                          setChosenEditCadet([cadet]);
+                          setIsMissingCadetModalOpen(true);
+                        }}
+                      />)
+                      :
+                      (<Chip
+                        label="+"
+                        variant="outlined"
+                        color="default"
+                        size="small"
+                        onClick={() => {
+                          setChosenEditCadet([cadet]);
+                          setIsMissingCadetModalOpen(true);
+                        }}
+                      />)
+                    )
+                  }
+
                 </Stack>
               ))}
             </AccordionDetails>
           </Accordion>
         );
       })}
-      <AddCadetModal
+      <AddMissingCadetModal
         teams={companyWithCadets?.children}
-        isOpen={isModalOpen}
+        preselectedCadets={chosenEditCadet}
+        isOpen={isMissingCadetModalOpen}
         handleAddAttendance={updateAttendances}
         onClose={() => {
-          setIsModalOpen(false);
+          setIsMissingCadetModalOpen(false);
+        }}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        header={"איפוס כל הצוותים"}
+        content={"אישור יגרום לכל הצוותים להתאפס. בדוק לחצת בכוונה?"}
+        onClose={() => {
+          setIsConfirmationModalOpen(false);
+        }}
+        onApprove={() => {
+          companyWithCadets.children
+            .forEach(team => handleResetTeam(team.id));
+          setIsConfirmationModalOpen(false);
+        }}
+        onReject={() => {
+          setIsConfirmationModalOpen(false);
         }}
       />
     </>

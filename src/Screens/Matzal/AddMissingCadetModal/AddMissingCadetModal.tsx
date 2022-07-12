@@ -5,12 +5,11 @@ import {
   Button,
   Dialog,
   FormControl,
-  Paper,
   TextField,
   Typography,
   styled,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Utilities } from "../../../Services/Utilities";
 import { Attendance, Unit, User } from "../../../types/types";
 
@@ -21,14 +20,22 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
 
 type Props = {
   teams: Unit[];
+  preselectedCadets?: User[];
   isOpen: boolean;
   onClose: () => void;
   handleAddAttendance: (attendances: Attendance[]) => void;
 };
 
-export const AddCadetModal = (props: Props) => {
+export const AddMissingCadetModal = (props: Props) => {
   const [selectedCadets, setSelectedCadets] = useState<User[]>([]);
   const [reason, setReason] = useState("");
+  
+  useEffect(() => {
+    if (props.preselectedCadets && props.preselectedCadets?.length > 0) {
+      setSelectedCadets(props.preselectedCadets);
+      setReason(props.preselectedCadets[0].attendance.reason || "");
+    }
+  }, [props.preselectedCadets]);
 
   const allCadets = useMemo(() => {
     let allCadets: User[] = [];
@@ -95,7 +102,7 @@ export const AddCadetModal = (props: Props) => {
             mt: "16px",
           }}
         >
-          <Button onClick={onAddAttendancesClick}>הוספת צוער</Button>
+          <Button onClick={onAddAttendancesClick}>הזן חסר</Button>
         </Box>
       </Box>
     </Dialog>
