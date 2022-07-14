@@ -56,6 +56,7 @@ export const Logistics = () => {
   }
 
   const handleCloseBorrowItemDialog = () => {
+    getItemsList(user.team.parent.id);
     setCurrentItemToBorrow(null)
   }
 

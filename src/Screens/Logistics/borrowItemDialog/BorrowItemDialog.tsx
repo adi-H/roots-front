@@ -89,7 +89,7 @@ const BorrowItemDialog = ({ isOpen, handleClose, itemId, itemName }: propsType) 
     }, [plugaId])
 
     const onSubmit = async (itemToBorrow: any) => {
-        ItemsService.borrowItem({ itemId, ...itemToBorrow })
+        await ItemsService.borrowItem({ itemId, ...itemToBorrow })
         handleClose()
     }
 
