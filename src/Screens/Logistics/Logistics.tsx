@@ -56,11 +56,12 @@ export const Logistics = () => {
   }
 
   const handleCloseBorrowItemDialog = () => {
+    getItemsList(user.team.parent.id);
     setCurrentItemToBorrow(null)
   }
 
   const handleAddItem = (itemToCreate: Item) => {
-    setItemsList([...itemsList, itemToCreate])
+    setItemsList([...itemsList, { ...itemToCreate, borrowedByMe: [] }])
     handleCloseAddItemDialog();
   }
 

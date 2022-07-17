@@ -22,24 +22,30 @@ type propsType = {
     handleOpenBorrowDialog: (item: Item) => void
 }
 
-type tableRow = { id: string, name: string }
+type tableRow = { id: string, name: string, fieldToShow?: (item: Item) => any }
 
 const { NAME, TOTAL_QUANTITY, UNUSABLE_QUANTITY, DESCRIPTION } = itemFields
 
+const amountOfBorrowedItem = (item: Item) => {
+    return item.borrowedByMe.reduce((prev, current) => {
+        return prev + current.quantity;
+    }, 0);
+}
+
 const tableRows: tableRow[] = [
-    { id: NAME, name: 'שם פריט' },
-    { id: TOTAL_QUANTITY, name: 'כמות זמינה' },
-    { id: UNUSABLE_QUANTITY, name: 'כמות בלאי' },
-    { id: DESCRIPTION, name: 'פירוט' }
+    { id: NAME, name: 'שם פריט', fieldToShow: (item: Item) => { return item.name } },
+    { id: TOTAL_QUANTITY, name: 'כמות זמינה', fieldToShow: (item: Item) => { return item.totalQuantity - amountOfBorrowedItem(item) } },
+    { id: UNUSABLE_QUANTITY, name: 'כמות בלאי', fieldToShow: (item: Item) => { return item.unUseableQuantity } },
+    { id: DESCRIPTION, name: 'פירוט', fieldToShow: (item: Item) => { return item.description } }
 ];
 
-const tableActions = [
+const tableActions: tableRow[] = [
     { id: 'deleteIcon', name: '' },
     { id: 'borrowIcon', name: '' },
     { id: 'editIcon', name: '' }
 ]
 
-const LogisticTable = ({ itemsList, handleOpenEditDialog, handleDeleteItem ,handleOpenBorrowDialog }: propsType) => {
+const LogisticTable = ({ itemsList, handleOpenEditDialog, handleDeleteItem, handleOpenBorrowDialog }: propsType) => {
 
     const handleDeleteItemFromList = async (itemIdToDelete: number) => {
         try {
@@ -65,7 +71,7 @@ const LogisticTable = ({ itemsList, handleOpenEditDialog, handleDeleteItem ,hand
                         <TableRow key={item.id}>
                             {tableRows.map((row: tableRow) => (
                                 <TableCell key={`${item.id}${row.id}`} align='center'>
-                                    {item[row.id]}
+                                    {row.fieldToShow ? row.fieldToShow(item) : ''}
                                 </TableCell>
                             ))}
                             <TableCell key={`${item.id}edit`} align='center'>

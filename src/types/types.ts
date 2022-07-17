@@ -59,17 +59,18 @@ export interface Url {
 export interface Item {
   id: number;
   name: string;
-  readyToUseQuantity: number;
+  totalQuantity: number;
   unUseableQuantity: number;
   description: string;
   owner: Unit;
   usedBy: Unit;
+  borrowedByMe: ItemToBorrow[];
 }
 
 export interface ItemToBorrow {
   itemId: number;
   user: number;
-  quantityToBorrow: number;
+  quantity: number;
   description: string;
 }
 
