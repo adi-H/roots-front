@@ -19,7 +19,7 @@ export interface Quiz {
 
 export interface User {
   id: number;
-  firstName: Building;
+  firstName: string;
   lastName: string;
   phoneNumber: string;
   team: Unit;
@@ -75,9 +75,9 @@ export interface ItemToBorrow {
 }
 
 export interface Attendance {
-  user: User;
-  reason: string;
-  inAttendance: boolean;
+  userId: number;
+  reason: string | null;
+  inAttendance: boolean | null;
 }
 export interface ClassType {
   id: number;
