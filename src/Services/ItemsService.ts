@@ -1,4 +1,4 @@
-import { Item } from "../types/types";
+import { Item, ItemToBorrow } from "../types/types";
 import { axiosInstance } from "./AxiosInstance";
 
 export class ItemsService {
@@ -12,5 +12,13 @@ export class ItemsService {
 
   public static async createItem(itemToCreate: Item) {
     await axiosInstance.post<Item>(`/items`, itemToCreate);
+  }
+
+  public static async editItem(itemToEdit: Item) {
+    await axiosInstance.put<Item>(`/items`, itemToEdit);
+  }
+
+  public static async borrowItem(itemToBorrom: ItemToBorrow) {
+    await axiosInstance.post<ItemToBorrow>(`/items/borrow`, itemToBorrom);
   }
 }

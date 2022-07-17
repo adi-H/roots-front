@@ -157,8 +157,11 @@ export const Matzal = () => {
   const handleResetTeam = async (teamId: number) => {
     try {
       await AttendanceService.clearTeam(teamId);
+      
       setCompanyWithCadets(await UnitService.getCadetsInCompany());
-      toast.success(`מצ"ל צוות ${teamId} נוקה בהצלחה`);
+
+      // This message is quite annoying, removing for now
+      //toast.success(`מצ"ל צוות ${teamId} נוקה בהצלחה`);
     } catch (e) {
       toast.error('אירעה שגיאה בניקוי המצ"ל');
     }

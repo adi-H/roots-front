@@ -5,9 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: omridim/roots-front
-  pullPolicy: IfNotPresent
+  repository: dorsivan/roots-front
+  pullPolicy: Always #IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
+  # tag: dev.3
   tag: ""
 
 imagePullSecrets: []

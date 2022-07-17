@@ -1,7 +1,6 @@
 const itemFields = {
     NAME: 'name',
-    READY_TO_USE_QUANTITY: 'readyToUseQuantity',
-    IN_USE_QUANTITY: 'inUseQunatity',
+    TOTAL_QUANTITY: 'totalQuantity',
     UNUSABLE_QUANTITY:'unUseableQuantity',
     DESCRIPTION: 'description'
 }

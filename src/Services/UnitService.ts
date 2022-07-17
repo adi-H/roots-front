@@ -10,7 +10,7 @@ export class UnitService {
     return (await axiosInstance.get<Unit>("/unit/allCadetsInCompany")).data;
   }
 
-  public static async getCompaniesByGdud(gdudId: number) {
+  public static async getCompaniesByGdudId(gdudId: number) {
     return (await axiosInstance.get<Unit[]>(`/unit/companiesByGdud/${gdudId}`))
       .data;
   }
