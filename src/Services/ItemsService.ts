@@ -10,8 +10,8 @@ export class ItemsService {
     await axiosInstance.delete(`/items/${itemIdToDelete}`);
   }
 
-  public static async createItem(itemToCreate: Item) {
-    await axiosInstance.post<Item>(`/items`, itemToCreate);
+  public static async createItem(itemToCreate: Item): Promise<Item> {
+    return (await axiosInstance.post<Item>(`/items`, itemToCreate)).data;
   }
 
   public static async editItem(itemToEdit: Item) {

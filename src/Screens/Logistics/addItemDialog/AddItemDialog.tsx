@@ -48,8 +48,8 @@ const AddItemDialog = ({ isOpen, item, ownerId, handleAddItem, handleEditItem, h
                 handleEditItem(itemToCreate)
                 Swal.fire({ title: 'פריט עודכן בהצלחה', icon: 'success', timer: 3000 });
             } else {
-                await ItemsService.createItem({ ...itemToCreate, ownerId })
-                handleAddItem(itemToCreate)
+                const createdItem: Item = await ItemsService.createItem({ ...itemToCreate, ownerId })
+                handleAddItem(createdItem);
                 Swal.fire({ title: 'פריט נוצר בהצלחה', icon: 'success', timer: 3000 });
             }
         } catch (error) {
