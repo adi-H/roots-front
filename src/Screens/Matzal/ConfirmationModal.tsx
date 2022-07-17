@@ -12,8 +12,6 @@ import { TransitionProps } from '@mui/material/transitions';
 
 type Props = {
   isOpen: boolean;
-  header: string;
-  content?: string;
   onClose: () => void;
   onApprove?: () => void;
   onReject?: () => void;
@@ -28,27 +26,31 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const ConfirmationModal = (props: Props) => {
+export const ConfirmationModal = ({isOpen, onClose, onApprove, onReject}: Props) => {
+  
+  const header: string = "איפוס כל הצוותים";
+  const content: string = "אישור יגרום לכל הצוותים להתאפס. בדוק לחצת בכוונה?";
+
   return (
     <div>
       <Dialog
-        open={props.isOpen}
+        open={isOpen}
         TransitionComponent={Transition}
         keepMounted
-        onClose={props.onClose}
+        onClose={onClose}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
-          {props.header}
+          {header}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {props.content}
+            {content}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.onReject}>חזל"ש</Button>
-          <Button onClick={props.onApprove}>יאללה</Button>
+          <Button onClick={onReject}>חזל"ש</Button>
+          <Button onClick={onApprove}>יאללה</Button>
         </DialogActions>
       </Dialog>
     </div>

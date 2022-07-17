@@ -20,34 +20,40 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
 
 type Props = {
   teams: Unit[];
-  preselectedCadets?: User[];
+  preselectedCadets: User[];
+  setCadets: (cadets: User[]) => void;
   isOpen: boolean;
   onClose: () => void;
   handleAddAttendance: (attendances: Attendance[]) => void;
 };
 
-export const AddMissingCadetModal = (props: Props) => {
-  const [selectedCadets, setSelectedCadets] = useState<User[]>([]);
+export const AddMissingCadetModal = (
+  { teams,
+    preselectedCadets,
+    setCadets,
+    isOpen,
+    onClose,
+    handleAddAttendance
+  }: Props) => {
   const [reason, setReason] = useState("");
-  
+
   useEffect(() => {
-    if (props.preselectedCadets && props.preselectedCadets?.length > 0) {
-      setSelectedCadets(props.preselectedCadets);
-      setReason(props.preselectedCadets[0].attendance.reason || "");
+    if (preselectedCadets && preselectedCadets?.length > 0) {
+      setReason(preselectedCadets[0].attendance.reason || "");
     }
-  }, [props.preselectedCadets]);
+  }, [preselectedCadets]);
 
   const allCadets = useMemo(() => {
     let allCadets: User[] = [];
-    props.teams?.forEach((team) =>
+    teams?.forEach((team) =>
       team.teamCadets?.forEach((cadet) => allCadets.push(cadet))
     );
     return allCadets;
-  }, [props.teams]);
+  }, [teams]);
 
   const onAddAttendancesClick = () => {
     const newAttendances: Attendance[] = [];
-    selectedCadets.forEach((cadet) =>
+    preselectedCadets.forEach((cadet) =>
       newAttendances.push({
         userId: cadet.id,
         inAttendance: false,
@@ -55,12 +61,12 @@ export const AddMissingCadetModal = (props: Props) => {
       })
     );
 
-    props.onClose();
-    props.handleAddAttendance(newAttendances);
+    onClose();
+    handleAddAttendance(newAttendances);
   };
 
   return (
-    <Dialog fullWidth open={props.isOpen} onClose={props.onClose}>
+    <Dialog fullWidth open={isOpen} onClose={onClose}>
       <Box
         sx={{
           padding: "8px",
@@ -77,9 +83,9 @@ export const AddMissingCadetModal = (props: Props) => {
                 backgroundColor: "white",
               }}
               options={allCadets}
-              value={selectedCadets}
+              value={preselectedCadets}
               onChange={(event, newValue) => {
-                setSelectedCadets(newValue as User[]);
+                setCadets(newValue as User[]);
               }}
               getOptionLabel={(option) => Utilities.getFullName(option)}
               multiple={true}

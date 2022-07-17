@@ -157,11 +157,7 @@ export const Matzal = () => {
   const handleResetTeam = async (teamId: number) => {
     try {
       await AttendanceService.clearTeam(teamId);
-      
       setCompanyWithCadets(await UnitService.getCadetsInCompany());
-
-      // This message is quite annoying, removing for now
-      //toast.success(`מצ"ל צוות ${teamId} נוקה בהצלחה`);
     } catch (e) {
       toast.error('אירעה שגיאה בניקוי המצ"ל');
     }
@@ -244,7 +240,10 @@ export const Matzal = () => {
             style={{
               background: "#F6E971",
             }}
-            onClick={() => setIsMissingCadetModalOpen(true)}
+            onClick={() => {
+              setChosenEditCadet([]);
+              setIsMissingCadetModalOpen(true)
+            }}
           >
             <PersonRemove sx={{ color: "white" }} />
           </AddMissingCadetButton>
@@ -362,6 +361,7 @@ export const Matzal = () => {
       <AddMissingCadetModal
         teams={companyWithCadets?.children}
         preselectedCadets={chosenEditCadet}
+        setCadets={setChosenEditCadet}
         isOpen={isMissingCadetModalOpen}
         handleAddAttendance={updateAttendances}
         onClose={() => {
@@ -370,8 +370,6 @@ export const Matzal = () => {
       />
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
-        header={"איפוס כל הצוותים"}
-        content={"אישור יגרום לכל הצוותים להתאפס. בדוק לחצת בכוונה?"}
         onClose={() => {
           setIsConfirmationModalOpen(false);
         }}
