@@ -7,8 +7,14 @@ export interface Class {
 }
 
 export interface Role {
-  id: string;
+  id: number;
   name: string;
+}
+
+export interface Quiz {
+  id: number;
+  name: string;
+  url: string;
 }
 
 export interface User {
@@ -50,15 +56,24 @@ export interface Url {
   url: string;
 }
 
-export interface Items {
+export interface Item {
   id: number;
   name: string;
-  quantity: number;
+  totalQuantity: number;
+  unUseableQuantity: number;
   description: string;
-  startedUseAt: Date;
   owner: Unit;
   usedBy: Unit;
+  borrowedByMe: ItemToBorrow[];
 }
+
+export interface ItemToBorrow {
+  itemId: number;
+  user: number;
+  quantity: number;
+  description: string;
+}
+
 export interface Attendance {
   user: User;
   reason: string;

@@ -1,0 +1,22 @@
+.vis-label {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.vis-text {
+    color: black !important;
+}
+
+.vis-time-axis.vis-background {
+    display: none;
+}
+
+.vis-time-axis.vis-foreground {
+    background: white;
+    z-index: 2;
+}
+
+.vis-group {
+    min-width: 150px;
+}

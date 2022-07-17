@@ -1,32 +1,64 @@
-import { Box, Paper, Typography } from "@mui/material";
-import { BackButton } from "./BackButton";
+import {
+  AppBar,
+  Box,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { styled } from "@mui/system";
+import PageTitleBackButton from "./PageTitleBackButton";
+import { PageTitleLogo } from "./PageTitleLogo";
 
-type Props = { title: string };
+const StyledPageTitleText = styled(Typography)(({ theme }) => ({
+  color: "black",
+  fontWeight: "bold",
+  textAlign: "center",
+  flexGrow: 1,
+  fontSize: "1.25rem",
+  [theme.breakpoints.up("md")]: {
+    fontSize: "1.5rem",
+  },
+  [theme.breakpoints.up("lg")]: {
+    fontSize: "2rem",
+  },
+}));
+
+type Props = { title: string; disableBackButton?: boolean };
 
 export const PageTitle = (props: Props) => {
+  const showBackButton = !props.disableBackButton;
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.up("sm"));
+  const md = useMediaQuery(theme.breakpoints.up("md"));
+  const lg = useMediaQuery(theme.breakpoints.up("lg"));
+  const APPBAR_HEIGHT = lg ? "60px" : md ? "55px" : sm ? "50px" : "50px";
+
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-      <Paper
+    <>
+      <Box sx={{ height: 0, mb: APPBAR_HEIGHT }}></Box>
+      <AppBar
+        elevation={3}
         sx={{
-          backgroundColor: "rgba(66, 66, 66, 0.7)",
-          borderRadius: "0px 25px 25px 0px",
-          width: "60%",
-          margin: "8% 0 8% 0",
-          boxShadow: "2",
-          textShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
+          height: APPBAR_HEIGHT,
+          background: "white",
+          justifyContent: "center",
         }}
       >
-        <Typography
-          style={{ color: "white", marginRight: "4%" }}
-          fontWeight={"bold"}
-          fontSize={"2rem"}
+        <Stack
+          direction={"row"}
+          justifyContent="space-evenly"
+          alignItems="center"
         >
-          {props.title}
-        </Typography>
-      </Paper>
-      <Box sx={{ display: "flex", width: "15%", alignItems: "center" }}>
-        <BackButton />
-      </Box>
-    </Box>
+          <Box sx={{ width: "20px", margin: "0 4vw 0 0" }}>
+            {showBackButton && <PageTitleBackButton />}
+          </Box>
+          <StyledPageTitleText>{props.title}</StyledPageTitleText>
+          <Box sx={{ width: "20px", margin: "0 2vw" }}>
+            <PageTitleLogo />
+          </Box>
+        </Stack>
+      </AppBar>
+    </>
   );
 };

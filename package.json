@@ -12,6 +12,7 @@
     "@devexpress/dx-react-scheduler-material-ui": "^3.0.2",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.8.0",
+    "@hookform/resolvers": "^2.9.0",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@mui/icons-material": "^5.4.2",
     "@mui/lab": "^5.0.0-alpha.74",
@@ -27,15 +28,21 @@
     "react": "^17.0.2",
     "react-card-flip": "^1.1.5",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.31.3",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-toastify": "^9.0.5",
+    "react-usestateref": "^1.0.8",
     "socket.io-client": "^4.4.1",
     "stylis": "^4.0.13",
-    "react-usestateref": "^1.0.8",
     "stylis-plugin-rtl": "^2.1.1",
     "sweetalert2": "^11.4.7",
     "typescript": "^4.5.5",
-    "web-vitals": "^2.1.4"
+    "vis": "^4.21.0-EOL",
+    "vis-data": "^7.1.4",
+    "vis-timeline": "^7.5.1",
+    "web-vitals": "^2.1.4",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
@@ -44,6 +51,7 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@types/stylis": "^4.0.2",
+    "@types/vis": "^4.21.24",
     "typescript": "^4.5.5"
   },
   "scripts": {
