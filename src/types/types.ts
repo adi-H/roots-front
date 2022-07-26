@@ -72,6 +72,9 @@ export interface ItemToBorrow {
   user: number;
   quantity: number;
   description: string;
+  borrowdDate: Date;
+  returnDate: Date;
+  status: string;
 }
 
 export interface Attendance {

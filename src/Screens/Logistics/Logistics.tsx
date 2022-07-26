@@ -7,9 +7,10 @@ import { PageTitle } from '../../Common/PageTitle/PageTitle';
 import { useAuth } from '../../Hooks/useAuth';
 import LogisticTable from './LogisticTable';
 import { AddItemDialog } from './addItemDialog';
-import BorrowItemDialog from './borrowItemDialog';
+import BorrowItemDialog from './addBorrowItemDialog';
 import { Item } from '../../types/types';
 import { ItemsService } from '../../Services/ItemsService';
+import BorrowdItemsDialog from './borrowedItemsDialog/BorrowdItemsDialog';
 
 type addDialogStateType = {
   isOpen: boolean,
@@ -119,6 +120,7 @@ export const Logistics = () => {
             itemName={currentItemToBorrow.name}
             handleClose={handleCloseBorrowItemDialog}
           />}
+        {/* <BorrowdItemsDialog isOpen={true} handleClose={() => { }} /> */}
       </Grid>
     </Paper>
   );

@@ -18,6 +18,10 @@ export class ItemsService {
     await axiosInstance.put<Item>(`/items`, itemToEdit);
   }
 
+  public static async getBorrowedItems(ownerId: number, itemId: number | null): Promise<ItemToBorrow[]> {
+    return (await axiosInstance.get<ItemToBorrow[]>(`/items/borrowedHistory/${ownerId}/${itemId}`)).data;
+  }
+
   public static async borrowItem(itemToBorrom: ItemToBorrow) {
     await axiosInstance.post<ItemToBorrow>(`/items/borrow`, itemToBorrom);
   }

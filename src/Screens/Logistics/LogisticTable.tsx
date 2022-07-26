@@ -27,7 +27,7 @@ type tableRow = { id: string, name: string, fieldToShow?: (item: Item) => any }
 const { NAME, TOTAL_QUANTITY, UNUSABLE_QUANTITY, DESCRIPTION } = itemFields
 
 const amountOfBorrowedItem = (item: Item) => {
-    return item.borrowedByMe.reduce((prev, current) => {
+    return item?.borrowedByMe?.reduce((prev, current) => {
         return prev + current.quantity;
     }, 0);
 }
